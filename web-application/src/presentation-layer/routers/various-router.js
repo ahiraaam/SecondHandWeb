@@ -1,10 +1,8 @@
-
 const express = require('express')
-
-module.exports = function({accountManager}){
+module.exports = function({}){
   // Name all the dependencies in the curly brackets. 
   
- 	 const router = express.Router()
+ 	const router = express.Router()
   
 	router.get("/", function(request, response){
 		response.render("home.hbs")

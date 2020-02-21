@@ -2,46 +2,25 @@
 const awilix = require('awilix')
 const container = awilix.createContainer()
 
-container.register(
-	"db",
-	awilix.asFunction(require('./data-access-layer/db'))
-)
+//const db = require('./data-access-layer/account-repository')
+const accountRepository = require('./data-access-layer/account-repository')
+const accountValidator = require('./business-logic-layer/account-validator')
+const accountManager = require('./business-logic-layer/account-manager')
+const accountRouter = require('./presentation-layer/routers/account-router')
+const variousRouter = require('./presentation-layer/routers/various-router')
+const app = require('./presentation-layer/app')
 
-container.register(
-	"accountRepository",
-	awilix.asFunction(require('./data-access-layer/account-repository'))
-)
 
-container.register(
-	"accountValidator",
-	awilix.asFunction(require('./business-logic-layer/account-validator'))
-)
+//container.register("db", awilix.asFunction(db))
+container.register("accountRepository",awilix.asFunction(accountRepository))
+container.register("accountValidator",awilix.asFunction(accountValidator))
+container.register("accountManager",awilix.asFunction(accountManager))
+container.register("accountRouter",awilix.asFunction(accountRouter))
+container.register("variousRouter",awilix.asFunction(variousRouter))
+container.register("app",awilix.asFunction(app))
 
-container.register(
-	"accountManager",
-	awilix.asFunction(require('./business-logic-layer/account-manager'))
-)
-
-container.register(
-	"accountRouter",
-	awilix.asFunction(require('./presentation-layer/routers/account-router'))
-)
-
-container.register(
-	"variousRouter",
-	awilix.asFunction(require('./presentation-layer/routers/various-router'))
-)
-
-container.register(
-	"app",
-	awilix.asFunction(require('./presentation-layer/app'))
-)
-
-const accountRepository = container.resolve('accountRepository')
-const accountValidator = container.resolve('accountValidator')
-const accountManager = container.resolve('accountManager')
-const accountRouter = container.resolve('accountRouter')
-const variousRouter = container.resolve('variosRouter')
-const app = container.resolve('app')
+const main = container.resolve('app')
+main.listen(8080, ()=> console.log("app is running at port 8080"))
 
 ////////////////////////////////////Awilix Ends
+

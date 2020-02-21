@@ -2,9 +2,9 @@
   "name": "node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "mains.js",
   "scripts": {
-    "start": "nodemon --inspect=0.0.0.0 src/presentation-layer/app.js -L"
+    "start": "nodemon --inspect=0.0.0.0 src/main.js -L"
   },
   "keywords": [],
   "author": "",

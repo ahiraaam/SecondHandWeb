@@ -1,7 +1,6 @@
-
-module.exports = function({db}){
+const db = require('./db')
+module.exports = function({}){
 	return{
-		
 		/*
 			Retrieves all accounts ordered by username.
 			Possible errors: databaseError
@@ -65,6 +64,5 @@ module.exports = function({db}){
 	
 		
 	}
-
 
 }

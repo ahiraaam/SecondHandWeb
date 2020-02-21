@@ -15,7 +15,7 @@ INSERT INTO accounts (email,username, password) VALUES ("alice@gmail.com","Alice
 CREATE TABLE petitions (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(50) NOT NULL,
-	autor VARCHAR(50) NOT NULL,|
+	autor VARCHAR(50) NOT NULL,
 	comentary VARCHAR(100) NOT NULL,
 	place VARCHAR(50) NOT NULL,
 	state VARCHAR(30) NOT NULL,
@@ -40,6 +40,4 @@ CREATE TABLE offer (
 	price INT NOT NULL,
 	FOREIGN KEY (account_id) REFERENCES accounts(id),
 	FOREIGN KEY (petition_id) REFERENCES petitions(id)
-
-
 );

@@ -1,11 +1,7 @@
-
-
 const express = require('express')
-const accountManager = require('../../business-logic-layer/account-manager')
 
 module.exports = function({accountManager}){
-	 const router = express.Router()
-
+	const router = express.Router()
 
 	router.get("/sign-up", function(request, response){
 		response.render("accounts-sign-up.hbs")
@@ -99,13 +95,7 @@ module.exports = function({accountManager}){
 		})
 		
 	})
-	
-
-
-
-
 
 	return router
-
 
 }

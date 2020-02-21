@@ -1,6 +1,4 @@
-
-
-module.exports = function(container){
+module.exports = function({accountRepository,accountValidator}){
 	return{
 		
 		getAllAccounts : function(callback){
@@ -49,11 +47,6 @@ module.exports = function(container){
 			
 		}
 		
-
-
-
-
-
 
 	}
 }
