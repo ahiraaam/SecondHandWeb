@@ -1,0 +1,19 @@
+<div class="content">
+	<h2>Sign in</h2>
+	<p>Sign in using the form below.</p>
+</div>
+
+<form action="sign-in" method="POST">
+	
+	<label >User:</label><br>
+  	<input type="text" name="username" value=""><br>
+  	<label >Password:</label><br>
+  	<input type="password" name="password" value=""><br><br>
+  	<input type="submit" value="Submit">
+	
+	{{#if answer}}
+		<p></p>
+	{{else}}
+		<p>User or password are incorrect.</p>
+	{{/if}}
+</form>
