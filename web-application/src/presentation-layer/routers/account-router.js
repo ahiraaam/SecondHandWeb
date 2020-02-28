@@ -1,5 +1,7 @@
 const express = require('express')
 
+var session
+
 module.exports = function({accountManager}){
 	const router = express.Router()
 
@@ -42,7 +44,9 @@ module.exports = function({accountManager}){
 	
 	
 	router.post("/sign-in", function(request, response){
-	
+		
+		
+
 		const username = request.body.username
 		const password = request.body.password
 	
@@ -61,8 +65,17 @@ module.exports = function({accountManager}){
 			}
 			if(model.account == null){
 				exist.answer = false
+				console.log("No es correcto")
+				console.log("No es correcto")
+			}else{
+				session = request.session
+				session.uniqueID = username
+				console.log(session)
+				console.log("Se feliz")
+				console.log("Se feliz")
 			}
-			2
+
+			
 			response.render("accounts-sign-in.hbs", exist)
 		})
 	

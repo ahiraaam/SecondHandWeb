@@ -5,11 +5,25 @@ const expressHandlebars = require('express-handlebars')
 //const accountRouter = require('./routers/account-router')
 const bodyParser = require('body-parser')
 
+
+const redis = require('redis')
+
+const sessions = require('express-session')
+
+let RedisStore = require('connect-redis')(sessions)
+let RedisClient = redis.createClient(6379,"redis")
+
 module.exports = function({accountRouter,variousRouter}){
 
 	const app = express()
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({extended:true}))
+	app.use(sessions({
+		store: new RedisStore({client : RedisClient}),
+		secret: 'ponga aqui algo seguro',
+		resave: true,
+		saveUninitialized: true
+	}))
 
 	// Setup express-handlebars.
 	app.set('views', path.join(__dirname, 'views'))

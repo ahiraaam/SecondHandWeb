@@ -4,6 +4,8 @@ CREATE TABLE accounts (
 	email VARCHAR(50) NOT NULL,
 	username VARCHAR(50) NOT NULL,
 	password VARCHAR(30) NOT NULL,
+	createdAt DATE,
+	updatedAt DATE,
 	CONSTRAINT usernameUnique UNIQUE (username),
 	CONSTRAINT emailUnique UNIQUE (email)
 );
@@ -15,8 +17,8 @@ INSERT INTO accounts (email,username, password) VALUES ("alice@gmail.com","Alice
 CREATE TABLE petitions (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(50) NOT NULL,
-	autor VARCHAR(50) NOT NULL,
-	comentary VARCHAR(100) NOT NULL,
+	author VARCHAR(50) NOT NULL,
+	commentary VARCHAR(100) NOT NULL,
 	place VARCHAR(50) NOT NULL,
 	state VARCHAR(30) NOT NULL,
 	photo VARCHAR(100),
@@ -29,8 +31,8 @@ CREATE TABLE petitions (
 CREATE TABLE offer (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	title VARCHAR(50) NOT NULL,
-	autor VARCHAR(50) NOT NULL,
-	comentary VARCHAR(100) NOT NULL,
+	author VARCHAR(50) NOT NULL,
+	commentary VARCHAR(100) NOT NULL,
 	place VARCHAR(50) NOT NULL,
 	state VARCHAR(30) NOT NULL,
 	photo VARCHAR(100),

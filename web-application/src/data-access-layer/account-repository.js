@@ -48,7 +48,7 @@ module.exports = function({}){
 		*/
 		createAccount : function(account, callback){
 			
-			const query = `INSERT INTO accounts (email,username, password) VALUES (?, ?)`
+			const query = `INSERT INTO accounts (email,username, password) VALUES (?, ?,?)`
 			const values = [account.email, account.username, account.password]
 			
 			db.query(query, values, function(error, results){
