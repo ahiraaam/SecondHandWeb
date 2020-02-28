@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize')
 
+
 const sequelize = new Sequelize('webAppDatabase','root','theRootPassword',{
-    dialect: 'mysql',
+    dialect: 'postgres',
     host: 'database'
 })
 

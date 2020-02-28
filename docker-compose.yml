@@ -10,16 +10,24 @@ services:
     depends_on:
       - database
       - redis
-  "database":
+  database:
     build: "./database"
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=theRootPassword
       - MYSQL_DATABASE=webAppDatabase
-  "redis":
+  redis:
     image: redis:4.0.7 
     ports: 
       - "6379:6379"
     command: ["redis-server", "--appendonly", "yes"]
     hostname: redis
+  postgres:
+    image: postgres:10.4
+    ports: 
+      - "5432:5432"
+    environment: 
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD : theRootPassword
+      POSTGRES_DB: webAppDatabase
