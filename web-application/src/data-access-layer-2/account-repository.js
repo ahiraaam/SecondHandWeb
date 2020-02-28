@@ -1,40 +1,6 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = require('./db')
+const { Sequelize , Model, DataTypes } = require('sequelize')
+const Account = require('./db')
 
-
-  const Account  = sequelize.define('accounts',{
-    email: Sequelize.TEXT,
-    username: Sequelize.TEXT,
-    password : Sequelize.TEXT
-
-  })
-  
-  const Petition = sequelize.define('petitions',{
-    title: Sequelize.TEXT,
-    autor: Sequelize.TEXT,
-    comentary : Sequelize.TEXT,
-    place: Sequelize.TEXT,
-    state: Sequelize.TEXT,
-    photo : Sequelize.TEXT,
-    active: Sequelize.BOOLEAN
-  })
-
-  const Offer = sequelize.define('offer',{
-    title: Sequelize.TEXT,
-    autor: Sequelize.TEXT,
-    comentary : Sequelize.TEXT,
-    place: Sequelize.TEXT,
-    state: Sequelize.TEXT,
-    photo : Sequelize.TEXT,
-    active: Sequelize.TEXT,
-    price: Sequelize.INTEGER
-  })
-
-
-
-  Account.hasMany(Petition)
-  Account.hasMany(Offer)
-  Petition.hasMany(Offer)
 
   module.exports = function({}){
     return{
@@ -44,8 +10,6 @@ const sequelize = require('./db')
         Success value: The fetched accounts in an array.
       */
       getAllAccounts : function(callback){
-        
-
         Account.findAll({raw: true})
           .then(function(allAcounts){callback([],allAcounts)})
           .catch(function(error){
