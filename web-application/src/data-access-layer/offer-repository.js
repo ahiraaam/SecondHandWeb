@@ -6,9 +6,9 @@ module.exports = function({}){
 			Possible errors: databaseError
 			Success value: The fetched accounts in an array.
 		*/
-		getAllPetitions : function(callback){
+		getAllOffers : function(callback){
 			
-			const query = `SELECT * FROM offer ORDER BY title`
+			const query = `SELECT * FROM offer`
 			const values = []
 			
 			db.query(query, values, function(error, offers){
@@ -26,16 +26,16 @@ module.exports = function({}){
 			Possible errors: databaseError
 			Success value: The fetched petitions, or null if no petition has that autor.
 		*/
-		getPetitionByUsername : function(username, callback){
+		getOfferByPetition : function(petitionId, callback){
 			
-			const query = `SELECT * FROM petitions WHERE autor = ?`
-			const values = [username]
+			const query = `SELECT * FROM offer WHERE petition_id = ?`
+			const values = [petitionId]
 			
-			db.query(query, values, function(error, petitions){
+			db.query(query, values, function(error, offers){
 				if(error){
 					callback(['databaseError'], null)
 				}else{
-					callback([], petitions)
+					callback([], offers)
 				}
 			})
 			
@@ -45,10 +45,10 @@ module.exports = function({}){
 			Possible errors: databaseError, usernameTaken
 			Success value: The id of the new account.
 		*/
-		createPetition : function(petition, callback){
+		createOffer : function(offer, callback){
 			
-			const query = `INSERT INTO petitions (title,author,commentary, place, state, photo, active, account_id) VALUES (?,?,?,?,?,?,?,?)`
-			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, petition.active, petition.account_id]
+			const query = `INSERT INTO offer (title,author,commentary, place, state, photo,account_id, petition_id, active, price) VALUES (?,?,?,?,?,?,?,?,?,?)`
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,offer.account_id, offer.petition_id, offer.active, offer.price]
 			
 			db.query(query, values, function(error, results){
 				if(error){

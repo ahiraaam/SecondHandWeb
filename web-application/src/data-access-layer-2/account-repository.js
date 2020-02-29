@@ -27,7 +27,7 @@ const database = require('./db')
         Possible errors: databaseError
         Success value: The fetched account, or null if no account has that username.
       */
-      /*getAccountByUsername : function(username, callback){
+      getAccountByUsername : function(username, callback){
         
         const query = `SELECT * FROM accounts WHERE username = ? LIMIT 1`
         const values = [username]
@@ -42,7 +42,7 @@ const database = require('./db')
         
       },
 
-      */
+      
       /*
         Creates a new account.
         account: {username: "The username", password: "The password"}
@@ -51,7 +51,7 @@ const database = require('./db')
       */
       createAccount : function(account, callback){
         
-        Account.create({email:account.email,username: account.username,password: account.password})
+        database.account.create({email:account.email,username: account.username,password: account.password})
           .then(function(createdAccount){callback([],createdAccount.id)})
           .catch(function(error){callback(['databaseError'], null)})
         

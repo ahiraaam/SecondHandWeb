@@ -34,14 +34,17 @@ module.exports = function({accountManager}){
 		response.render("accounts-sign-up.hbs")
 	})
 	
+	router.post("sign-out", function(request,response){
+		session.destroy()
+		response.render("home.hbs")
+	})
 	
 	router.get("/sign-in", function(request, response){
 		const exist = {
 			answer :true
 		}
 		response.render("accounts-sign-in.hbs", exist)
-	})
-	
+	})	
 	
 	router.post("/sign-in", function(request, response){
 		
@@ -65,14 +68,10 @@ module.exports = function({accountManager}){
 			}
 			if(model.account == null){
 				exist.answer = false
-				console.log("No es correcto")
-				console.log("No es correcto")
 			}else{
 				session = request.session
 				session.uniqueID = username
 				console.log(session)
-				console.log("Se feliz")
-				console.log("Se feliz")
 			}
 
 			

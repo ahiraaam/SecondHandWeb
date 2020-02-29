@@ -21,6 +21,22 @@ module.exports = function({}){
 			
 		},
 
+		getSomePetitions : function(search, callback){
+			
+			const query = `SELECT * FROM petitions WHERE title LIKE %?%`
+			const values = [search]
+			
+			db.query(query, values, function(error, petitions){
+				if(error){
+					callback(['databaseError'], null)
+				}else{
+					callback([], petitions)
+				}
+			})
+			
+		},
+
+
 		/*
 			Retrieves the petitions with the given username as the author.
 			Possible errors: databaseError
