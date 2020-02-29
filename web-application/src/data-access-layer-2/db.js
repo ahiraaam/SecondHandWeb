@@ -24,7 +24,8 @@ sequelize.sync({ force: true })
   })
 
 module.exports = {
-  Account,
-  Offer,
-  Petition
+  account: Account,
+  offer: Offer,
+  petition: Petition 
 }
+

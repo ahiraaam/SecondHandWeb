@@ -1,5 +1,5 @@
 const { Sequelize , Model, DataTypes } = require('sequelize')
-const Account = require('./db')
+const database = require('./db')
 
 
   module.exports = function({}){
@@ -10,7 +10,8 @@ const Account = require('./db')
         Success value: The fetched accounts in an array.
       */
       getAllAccounts : function(callback){
-        Account.findAll({raw: true})
+        console.log("si")
+        database.account.findAll({raw: true})
           .then(function(allAcounts){callback([],allAcounts)})
           .catch(function(error){
             console.log(error)
