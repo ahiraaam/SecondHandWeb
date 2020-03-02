@@ -10,11 +10,23 @@ module.exports = function({offerRepository}){
 			offerRepository.getOfferByPetition(petition_id, callback)
 		},
 		
-		createoffer : function(petition, callback){
+		createOffer : function(offer, accountId, petitionId, callback){
 			
-			offerRepository.createOffer(offer, callback)
+			offerRepository.createOffer(offer, accountId, petitionId, callback)
 			
-		}
+		},
+
+		deleteOffer : function(offer_id, callback){
+
+			offerRepository.deleteOffer(offer_id,callback)
+		},
+
+		updateOffer : function(offer,active, callback){
+			
+			offerRepository.updateOffer(offer,id,active,callback)
+			
+		},
+
 		
 
 	}

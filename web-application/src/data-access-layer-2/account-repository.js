@@ -10,13 +10,13 @@ const database = require('./db')
         Success value: The fetched accounts in an array.
       */
       getAllAccounts : function(callback){
-        console.log("si")
-        database.account.findAll({raw: true})
+        const palabra = "Alice"
+        database.account.findAll({
+          where : { username :{ $like : '%Alice'  } },
+          raw: true
+        })
           .then(function(allAcounts){callback([],allAcounts)})
-          .catch(function(error){
-            console.log(error)
-            console.log("si")
-            callback(['databaseError'], null)
+          .catch(function(error){callback(['databaseError'], null)
           })
 
         
@@ -28,17 +28,13 @@ const database = require('./db')
         Success value: The fetched account, or null if no account has that username.
       */
       getAccountByUsername : function(username, callback){
-        
-        const query = `SELECT * FROM accounts WHERE username = ? LIMIT 1`
-        const values = [username]
-        
-        db.query(query, values, function(error, accounts){
-          if(error){
-            callback(['databaseError'], null)
-          }else{
-            callback([], accounts[0])
-          }
+
+        database.account.findOne({
+          where : {username : username},
+          raw: true
         })
+        .then(function(Account){callback([],Account)})
+        .catch(function(error){callback(['databaseError'], null)})
         
       },
 
@@ -55,6 +51,31 @@ const database = require('./db')
           .then(function(createdAccount){callback([],createdAccount.id)})
           .catch(function(error){callback(['databaseError'], null)})
         
+      },
+
+      deleteAccount : function(username,callback){
+        
+        database.account.destroy({
+          where : {username : username}
+        })
+        .then(function(){callback([],null)})
+        .catch(function(error){callback(['databaseError'], null)})
+
+      }, 
+
+      updateAccount : function(account, id ,callback){
+
+        database.account.update({
+          email : account.email,
+          username : account.username,
+          password : account.password
+        },{
+          where : {id : id}
+        })
+        .then(function(Account){callback([],Account.id)})
+        .catch(function(error){callback(['databaseError'], null)})
+
+
       }
     
       

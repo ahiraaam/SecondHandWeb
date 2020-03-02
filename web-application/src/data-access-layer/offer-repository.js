@@ -45,10 +45,42 @@ module.exports = function({}){
 			Possible errors: databaseError, usernameTaken
 			Success value: The id of the new account.
 		*/
-		createOffer : function(offer, callback){
-			
+		createOffer : function(offer, accountId, petitionId, callback){
+			const active = true
 			const query = `INSERT INTO offer (title,author,commentary, place, state, photo,account_id, petition_id, active, price) VALUES (?,?,?,?,?,?,?,?,?,?)`
-			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,offer.account_id, offer.petition_id, offer.active, offer.price]
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,accountId, petitionId, active, offer.price]
+			
+			db.query(query, values, function(error, results){
+				if(error){
+					// TODO: Look for usernameUnique violation.
+					callback(['databaseError'], null)
+				}else{
+					callback([], results.insertId)
+				}
+			})
+			
+		},
+
+		deleteOffer : function (offer_id,callback){
+
+			const query = `DELETE FROM offer WHERE id = ?`
+			const values = [offer_id]
+
+			db.query(query, values, function(error,results){
+				if(error){
+					callback([`databaseError`],null)
+				}else{
+					callback([], null)
+				}
+			})
+
+		},
+
+
+		updateOffer : function(offer,id, active, callback){
+			
+			const query = `UPDATE offer SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ?, active = ?, price = ? WHERE id = ?`
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,active, offer.price,id]
 			
 			db.query(query, values, function(error, results){
 				if(error){
@@ -60,6 +92,7 @@ module.exports = function({}){
 			})
 			
 		}
+
 	
 		
 	}

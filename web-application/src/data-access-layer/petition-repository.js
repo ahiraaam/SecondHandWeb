@@ -42,10 +42,10 @@ module.exports = function({}){
 			Possible errors: databaseError
 			Success value: The fetched petitions, or null if no petition has that autor.
 		*/
-		getPetitionByUsername : function(username, callback){
+		getPetitionByUsername : function(account_id, callback){
 			
-			const query = `SELECT * FROM petitions WHERE autor = ?`
-			const values = [username]
+			const query = `SELECT * FROM petitions WHERE account_id = ?`
+			const values = [account_id]
 			
 			db.query(query, values, function(error, petitions){
 				if(error){
@@ -61,10 +61,43 @@ module.exports = function({}){
 			Possible errors: databaseError, usernameTaken
 			Success value: The id of the new account.
 		*/
-		createPetition : function(petition, callback){
+		createPetition : function(petition, accountId , callback){
 			
+			const active = true
 			const query = `INSERT INTO petitions (title,author,commentary, place, state, photo, active, account_id) VALUES (?,?,?,?,?,?,?,?)`
-			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, petition.active, petition.account_id]
+			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, active, accountId]
+			
+			db.query(query, values, function(error, results){
+				if(error){
+					// TODO: Look for usernameUnique violation.
+					callback(['databaseError'], null)
+				}else{
+					callback([], results.insertId)
+				}
+			})
+			
+		},
+
+		deletePetition : function(petition_id,callback){
+			
+			const query = `DELETE FROM petitions WHERE id = ?`
+			const values = [petition_id]
+			
+			db.query(query, values, function(error, results){
+				if(error){
+					// TODO: Look for usernameUnique violation.
+					callback(['databaseError'], null)
+				}else{
+					callback([], null)
+				}
+			})
+
+		},
+
+		updatePetition : function(petition, id, active, callback){
+			
+			const query = `UPDATE petitions SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ?, active = ? WHERE id = ?`
+			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, active, id]
 			
 			db.query(query, values, function(error, results){
 				if(error){
