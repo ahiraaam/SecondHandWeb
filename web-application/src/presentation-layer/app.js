@@ -35,7 +35,7 @@ module.exports = function({accountRouter,variousRouter}){
 	}))
 
 	// Handle static files in the public folder.
-	app.use(express.static(path.join(__dirname, 'public')))
+	app.use(express.static(path.join(__dirname, '/public')))
 
 	// Attach all routers.
 	app.use('/', variousRouter)

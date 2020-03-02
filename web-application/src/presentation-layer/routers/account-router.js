@@ -1,7 +1,5 @@
 const express = require('express')
 
-var session
-
 module.exports = function({accountManager}){
 	const router = express.Router()
 
@@ -16,9 +14,7 @@ module.exports = function({accountManager}){
 		const password = request.body.password
 	
 		console.log(username,password)
-		console.log("bienvenidos")
-		console.log("pepino")
-	
+		console.log("bienvenidos")	
 		const account = {
 			email : email,
 			username : username,
@@ -29,14 +25,14 @@ module.exports = function({accountManager}){
 			console.log(result)
 			console.log(errors)
 		})
-		console.log("holi")
 		
 		response.render("accounts-sign-up.hbs")
 	})
 	
-	router.post("sign-out", function(request,response){
-		session.destroy()
-		response.render("home.hbs")
+	router.get("/sign-out", function(request,response){
+		request.session.destroy()
+		response.redirect("/")
+
 	})
 	
 	router.get("/sign-in", function(request, response){
@@ -47,16 +43,8 @@ module.exports = function({accountManager}){
 	})	
 	
 	router.post("/sign-in", function(request, response){
-		
-		
-
 		const username = request.body.username
 		const password = request.body.password
-	
-		console.log(username,password)
-		console.log("bienvenidos")
-		
-	
 		accountManager.ValidateSignIn(username,password,function(errors, account){
 			const model = {
 				errors: errors,
@@ -66,20 +54,18 @@ module.exports = function({accountManager}){
 			const exist = {
 				answer : true
 			}
+			
 			if(model.account == null){
 				exist.answer = false
+				response.render("accounts-sign-in.hbs", exist)
 			}else{
-				session = request.session
-				session.uniqueID = username
-				console.log(session)
+				request.session.isLoggedIn = true
+				request.session.username = username
+				response.redirect("/")
 			}
-
 			
-			response.render("accounts-sign-in.hbs", exist)
 		})
-	
 	})
-	
 	
 	router.get("/", function(request, response){
 		accountManager.getAllAccounts(function(errors, accounts){
@@ -91,8 +77,6 @@ module.exports = function({accountManager}){
 			response.render("accounts-list-all.hbs", model)
 		})
 	})
-	
-	
 	
 	router.get('/:username', function(request, response){
 		

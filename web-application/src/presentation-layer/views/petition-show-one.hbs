@@ -1,0 +1,32 @@
+<div class="container">
+    <h2 class="text-center">Petition</h2>
+    <div class="row py-3">
+        <div class="col-12 col-md-6">
+            <h1>{{title}} 100 años de Soledad</h1>
+            <img class="col-12 image"src="https://images-eu.ssl-images-amazon.com/images/I/51AHE6C2atL.jpg" alt="">
+        </div>
+        <div class="col-12 col-md-6 py-5">
+            <h3>Author: {{Author}}</h3>
+            <h3>Place: {{place}}</h3>
+            <h4>State: {{state}}</h4>
+            <p>Commentary: {{commentary}}</p>
+            <div class="text-center">
+                <button class="btn btn-lg btn-block primary-btn">Offer</button>
+            </div>
+        </div>
+    </div>
+    <div class="row py-5">
+        <div class="col">
+            <h3>Offers for this petition</h3>
+            {{#if offers.length}}
+                <ul>
+                    {{#each offer}}
+                        <li><a href="/offers/{{id}}">{{title}}</a></li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <p>No offers exist yet.</p>
+            {{/if}}
+        </div>
+    </div>
+</div>

@@ -5,7 +5,10 @@ module.exports = function({}){
  	const router = express.Router()
   
 	router.get("/", function(request, response){
-		response.render("home.hbs")
+		response.render("petitions-account.hbs",{
+			isLoggedIn: request.session.isLoggedIn,
+			username: request.session.username
+		})
 	})
 
 	router.get("/about", function(request, response){

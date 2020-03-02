@@ -1,19 +1,30 @@
-<div class="content">
-	<h2>Sign in</h2>
-	<p>Sign in using the form below.</p>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+			<div class="card my-5">
+				<div class="card-body">
+					<h5 class="card-title text-center">Sign In</h5>
+					<form action="sign-in" method="POST">
+						<div class="form-group">
+							<label for="inputEmail">Username</label>
+							<input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword">Password</label>							
+							<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+						</div>
+						<input class="btn primary-btn btn-block text-uppercase" type="submit" value="Sign in">
+						<div class="form-group my-3">
+							<a class="link" href="../accounts/sign-up">Don't have account? Sign Up</a>
+						</div>
+						{{#if answer}}
+							<p></p>
+						{{else}}
+							<p>User or password are incorrect.</p>
+						{{/if}}
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-
-<form action="sign-in" method="POST">
-	
-	<label >User:</label><br>
-  	<input type="text" name="username" value=""><br>
-  	<label >Password:</label><br>
-  	<input type="password" name="password" value=""><br><br>
-  	<input type="submit" value="Submit">
-	
-	{{#if answer}}
-		<p></p>
-	{{else}}
-		<p>User or password are incorrect.</p>
-	{{/if}}
-</form>
