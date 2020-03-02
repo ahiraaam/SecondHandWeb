@@ -34,8 +34,10 @@ module.exports = function({accountManager}){
 		response.render("accounts-sign-up.hbs")
 	})
 	
-	router.post("sign-out", function(request,response){
-		session.destroy()
+	router.get("/sign-out", function(request,response){
+		request.session.destroy()
+		console.log(session)
+		console.log("murio")
 		response.render("home.hbs")
 	})
 	
@@ -72,6 +74,7 @@ module.exports = function({accountManager}){
 				session = request.session
 				session.uniqueID = username
 				console.log(session)
+				console.log("vivio")
 			}
 
 			

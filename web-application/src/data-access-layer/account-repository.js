@@ -60,6 +60,38 @@ module.exports = function({}){
 				}
 			})
 			
+		},
+
+		deleteAccount : function(username,callback){
+			
+			const query = `DELETE FROM accounts WHERE username = ?`
+			const values = [username]
+			
+			db.query(query, values, function(error, results){
+				if(error){
+					// TODO: Look for usernameUnique violation.
+					callback(['databaseError'], null)
+				}else{
+					callback([], null)
+				}
+			})
+
+		},
+
+		updateAccount : function(account, id , callback){
+			
+			const query = `UPDATE accounts SET email= ? , username = ? , password = ? WHERE id = ?`
+			const values = [account.email, account.username, account.password,id]
+			
+			db.query(query, values, function(error, results){
+				if(error){
+					// TODO: Look for usernameUnique violation.
+					callback(['databaseError'], null)
+				}else{
+					callback([], results.insertId)
+				}
+			})
+			
 		}
 	
 		

@@ -3,7 +3,7 @@ const awilix = require('awilix')
 const container = awilix.createContainer()
 
 //const db = require('./data-access-layer/account-repository')
-const accountRepository = require('./data-access-layer/account-repository')
+const accountRepository = require('./data-access-layer-2/account-repository')
 const petitionRepository = require('./data-access-layer/petition-repository')
 const offerRepository = require('./data-access-layer/offer-repository')
 const accountValidator = require('./business-logic-layer/account-validator')

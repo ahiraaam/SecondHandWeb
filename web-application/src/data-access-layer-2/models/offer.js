@@ -6,7 +6,7 @@ module.exports = (sequelize,type) => {
         place: type.TEXT,
         state: type.TEXT,
         photo : type.TEXT,
-        active: type.TEXT,
+        active: type.BOOLEAN,
         price: type.INTEGER
       })
 }

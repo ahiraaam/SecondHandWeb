@@ -13,10 +13,9 @@ const Account = AccountModel(sequelize,Sequelize)
 const Offer = OfferModel(sequelize,Sequelize)
 const Petition = PetitionModel(sequelize,Sequelize)
 
-
-Account.hasMany(Petition)
-Account.hasMany(Offer)
-Petition.hasMany(Offer)
+Petition.belongsTo(Account,{foreignKey: 'accountId'})
+Offer.belongsTo(Account,{foreignKey: 'accountId'})
+Offer.belongsTo(Petition,{foreignKey: 'petitionId'})
 
 sequelize.sync({ force: true })
   .then(() => {
