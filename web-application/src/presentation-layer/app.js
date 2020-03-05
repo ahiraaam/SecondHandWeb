@@ -1,19 +1,14 @@
 const path = require('path')
 const express = require('express')
 const expressHandlebars = require('express-handlebars')
-//const variousRouter = require('./routers/various-router')
-//const accountRouter = require('./routers/account-router')
 const bodyParser = require('body-parser')
-
-
 const redis = require('redis')
-
 const sessions = require('express-session')
 
 let RedisStore = require('connect-redis')(sessions)
 let RedisClient = redis.createClient(6379,"redis")
 
-module.exports = function({accountRouter,variousRouter}){
+module.exports = function({accountRouter,variousRouter,petitionRouter,offerRouter}){
 
 	const app = express()
 	app.use(bodyParser.json())
@@ -31,15 +26,18 @@ module.exports = function({accountRouter,variousRouter}){
 	app.engine('hbs', expressHandlebars({
 		extname: 'hbs',
 		defaultLayout: 'main',
-		layoutsDir: path.join(__dirname, 'layouts')
+		layoutsDir: path.join(__dirname, 'layouts'),
+
 	}))
 
 	// Handle static files in the public folder.
-	app.use(express.static(path.join(__dirname, 'public')))
+	app.use(express.static(path.join(__dirname, '/public')))
 
 	// Attach all routers.
 	app.use('/', variousRouter)
 	app.use('/accounts', accountRouter)
+	app.use('/petitions', petitionRouter)
+	app.use('/offers', offerRouter)
 
 	// Start listening for incoming HTTP requests!
 	

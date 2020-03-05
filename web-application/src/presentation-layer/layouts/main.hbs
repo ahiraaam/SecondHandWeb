@@ -4,58 +4,52 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>The Community</title>
-	<link rel="stylesheet" href="/css/bulma.min.css">
 	<link rel="stylesheet" href="/css/layout.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-	
-	<div id="entire-page">
-		
-		<header class="is-size-1 has-text-centered">
-			The Community
-		</header>
-		
-		<nav class="navbar has-background-light" role="navigation" aria-label="main navigation">
-			
-			<div class="navbar-brand">
-				<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar">
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
+	<header>
+		<nav class="navbar navbar-expand-sm primary-color navbar-dark">
+			<!-- Brand/logo -->
+				<a class="btn primary-btn my-2 my-sm-0 my-lg-0 mr-auto" href="/petitions/create-petition">Create Petition</a>
+				<a class="navbar-brand mx-auto" href="/">
+					<img src="/images/book.svg" alt="logo" style="width:50px;">
+					SeLec
 				</a>
-			</div>
-
-			<div id="navbar" class="navbar-menu is-active">
-				
-				<div class="navbar-start">
-					<a class="navbar-item" href="/">Home</a>
-					<a class="navbar-item" href="/accounts">Accounts</a>
-				</div>
-				
-				<div class="navbar-end">
-					<div class="navbar-item">
-						<div class="buttons">
-							<a class="button is-primary" href="/accounts/sign-out">Sign out</a>
-							<a class="button is-primary" href="/accounts/sign-up">Sign up</a>
-							<a class="button is-dark" href="/accounts/sign-in">Sign in</a>
+			<ul class="navbar-nav mr-5 ml-auto">
+				{{#if isLoggedIn}}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+							{{username}}
+						</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="/petitions/user/{{accountId}}">My Petitions</a>
+							<a class="dropdown-item" href="/offers/user/{{accountId}}">My Offers</a>
+							<a class="dropdown-item" href="#">My Account</a>
+							<a class="dropdown-item" href="/accounts/sign-out">Log Out</a>
 						</div>
-					</div>
-				</div>
-				
-			</div>
+					</li>
+				{{else}}
+					<li class="nav-item">
+						<a href="/accounts/sign-in">
+							<button class="btn primary-btn">Sign In</button>
+						</a>
+					</li>
+				{{/if}}
+			</ul>
 		</nav>
-		
-		<main>{{{body}}}</main>
-		
-		<footer class="footer">
-			<div class="content has-text-centered">
-				Copyright © Peter Larsson-Green 2019 |
-				<a href="/about">About</a> |
-				<a href="/contact">Contact</a>
+	</header>
+	<main>
+		{{{body}}}
+	</main>
+
+		<footer class="col-12 font-small primary-color text-white "> 
+			<div class="footer-copyright text-center py-3">© 2020 Copyright:
+				<a> Ahiram es la mejor persona de este planeta</a>
 			</div>
 		</footer>
-		
-	</div>
-	
 </body>
 </html>

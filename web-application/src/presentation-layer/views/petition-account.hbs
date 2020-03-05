@@ -1,0 +1,63 @@
+<div class="container-fluid">
+   <h2 class="text-center">My Petitions</h2>
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active text-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-active" role="tab" aria-controls="v-pills-active" aria-selected="true">Active</a>
+                <a class="nav-link text-center" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-done" role="tab" aria-controls="v-pills-done" aria-selected="false">Done</a>
+            </div>
+        </div>
+       <div class="col-9 overflow-auto">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-active" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <div class="row">
+                        {{#if activePetitions.length}}
+                            {{#each activePetitions}}
+                                    <div class="col-4">
+                                        <div class="card mb-3">
+                                            <img class="card-img-top image-card" src="{{photo}}" alt="">
+                                            <div class="card-body">
+                                                <h4 class="card-title">{{title}} </h4>
+                                                <p class="card-text">{{place}}</p>
+                                                <div class="row">
+                                                    <div class="col-6 text-center">
+                                                        <a href="/petitions/{{id}}" class="btn primary-btn">See More</a>
+                                                    </div>
+                                                    <form class="col-6 justify-content-center form-inline" action="/petitions/delete-petition/{{id}}" method="POST">
+                                                        <button class="btn primary-btn" type="submit">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                            {{/each}}
+                        {{else}}
+                            <h3>No petitions yet</h3>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-done" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <div class="row">
+                        {{#if inactivePetitions.length}}
+                            {{#each inactivePetitions}}
+                                    <div class="col-4">
+                                        <div class="card">
+                                            <img class="card-img-top" src="https://i.ytimg.com/vi/WE00soncSqw/maxresdefault.jpg" alt="">
+                                            <div class="card-body">
+                                                <h4 class="card-title">{{title}}</h4>
+                                                <p class="card-text">{{place}}</p>
+                                                <a href="/petitions/{{id}}" class="btn primary-btn">See More</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            {{/each}}
+                        {{else}}
+                            <h3>No done petitions yet</h3>
+                        {{/if}}
+                    </div>                   
+                </div>
+            </div>
+       </div>
+    </div>
+</div>

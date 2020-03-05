@@ -10,9 +10,21 @@ module.exports = function({petitionRepository}){
 		},
 		
 		getPetitionByUsername : function(account_id, callback){
-			petitionRepository.getPetitionByUsername(username, callback)
+			petitionRepository.getPetitionByUsername(account_id, callback)
 		},
-		
+		getActivePetitionByUsername: function(account_id, callback){
+			petitionRepository.getActivePetitionByUsername(account_id,callback)
+		},
+		getInactivePetitionByUsername: function(account_id, callback){
+			petitionRepository.getInactivePetitionByUsername(account_id,callback)
+		},
+		getPetitionById : function(id, callback){
+			petitionRepository.getPetitionById(id, callback)
+		},
+		getAccountOfPetition: function(id,callback){
+			petitionRepository.getAccountOfPetition(id,callback)
+		},
+
 		createPetition : function(petition, accountId, callback){
 			
 			petitionRepository.createPetition(petition, accountId, callback)
@@ -25,9 +37,9 @@ module.exports = function({petitionRepository}){
 
 		},
 
-		updatePetition : function(petition,id, active,callback){
+		updatePetition : function(petition,id,callback){
 
-			petitionRepository.updatePetition(petition,id,active, callback)
+			petitionRepository.updatePetition(petition, id , callback)
 		}
 
 		

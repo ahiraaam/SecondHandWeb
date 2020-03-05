@@ -51,8 +51,8 @@ module.exports = function({accountRepository,accountValidator}){
 			accountRepository.deleteAccount(username, callback)
 		},
 		
-		updateAccount : function(username,callback){
-			accountRepository.updateAccount(account,id,callback)
+		updateAccount : function(account_id,callback){
+			accountRepository.updateAccount(account_id,callback)
 		}
 
 

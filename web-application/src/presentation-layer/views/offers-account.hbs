@@ -1,0 +1,55 @@
+<div class="container-fluid">
+   <h2 class="text-center">My Offers</h2>
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active text-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-active" role="tab" aria-controls="v-pills-active" aria-selected="true">Active</a>
+                <a class="nav-link text-center" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-done" role="tab" aria-controls="v-pills-done" aria-selected="false">Done</a>
+            </div>
+        </div>
+       <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-active" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <div class="row">
+                        {{#if offers.length}}
+                            {{#each offers}}
+                                <div class="col-4">
+                                    <div class="card">
+                                        <img class="card-img-top" src="{{image}}" alt="">
+                                        <div class="card-body">
+                                            <h4 class="card-title">{{title}} Ahiram</h4>
+                                            <p class="card-text">{{place}}Maravilla</p>
+                                            <a href="/offers/{{id}}" class="btn primary-btn">See More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            <h3>No offers yet</h3>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-done" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <div class="row">
+                        {{#if offerslength}}
+                            {{#each offer}}
+                                <div class="col-4">
+                                    <div class="card">
+                                        <img class="card-img-top" src="https://i.ytimg.com/vi/WE00soncSqw/maxresdefault.jpg" alt="">
+                                        <div class="card-body">
+                                            <h4 class="card-title">{{title}} Ahiram</h4>
+                                            <p class="card-text">{{place}}Maravilla</p>
+                                            <a href="/petitions/{{id}}" class="btn primary-btn">See More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{else}}
+                            <h3>No done offers yet</h3>
+                        {{/if}}
+                    </div>                   
+                </div>
+            </div>
+       </div>
+    </div>
+</div>
