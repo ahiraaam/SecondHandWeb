@@ -41,3 +41,16 @@ CREATE TABLE offer (
 	FOREIGN KEY (account_id) REFERENCES accounts(id),
 	FOREIGN KEY (petition_id) REFERENCES petitions(id)
 );
+
+
+CREATE TABLE purchases(
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	direction VARCHAR(100) NOT NULL,
+	offer_id INT UNSIGNED,
+	petition_id INT UNSIGNED,
+	account_id INT UNSIGNED,
+	FOREIGN KEY (account_id) REFERENCES accounts(id),
+	FOREIGN KEY (petition_id) REFERENCES petitions(id),
+	FOREIGN KEY (offer_id) REFERENCES offer(id)
+
+)

@@ -96,8 +96,8 @@ module.exports = function({}){
 
 		updatePetition : function(petition, id, active, callback){
 			
-			const query = `UPDATE petitions SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ?, active = ? WHERE id = ?`
-			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, active, id]
+			const query = `UPDATE petitions SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ? WHERE id = ?`
+			const values = [petition.title,petition.author,petition.commentary, petition.place, petition.state, petition.photo, id]
 			
 			db.query(query, values, function(error, results){
 				if(error){

@@ -15,9 +15,9 @@ const database = require('./db')
           where : { username :{ $like : '%Alice'  } },
           raw: true
         })
-          .then(function(allAcounts){callback([],allAcounts)})
-          .catch(function(error){callback(['databaseError'], null)
-          })
+        .then(function(allAcounts){callback([],allAcounts)})
+        .catch(function(error){callback(['databaseError'], null)
+        })
 
         
       },
