@@ -23,6 +23,8 @@ CREATE TABLE petitions (
 	active BOOLEAN NOT NULL,
 	account_id INT UNSIGNED,
 	FOREIGN KEY (account_id) REFERENCES accounts(id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 );
 
 
@@ -40,4 +42,6 @@ CREATE TABLE offer (
 	price INT NOT NULL,
 	FOREIGN KEY (account_id) REFERENCES accounts(id),
 	FOREIGN KEY (petition_id) REFERENCES petitions(id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
 );

@@ -4,10 +4,16 @@ module.exports = function({offerRepository}){
 		getAllOffers : function(callback){
 			offerRepository.getAllOffers(callback)
         },
-        
+        getOfferByUsername: function(accountId, callback){
+			offerRepository.getOfferByUsername(accountId, callback)
+		},
 		
 		getOfferByPetition : function(petition_id, callback){
 			offerRepository.getOfferByPetition(petition_id, callback)
+		},
+
+		getOfferById : function(offerId, callback){
+			offerRepository.getOfferById(offerId, callback)
 		},
 		
 		createOffer : function(offer, accountId, petitionId, callback){

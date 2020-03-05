@@ -13,8 +13,6 @@ module.exports = function({accountManager}){
 		const username = request.body.username
 		const password = request.body.password
 	
-		console.log(username,password)
-		console.log("bienvenidos")	
 		const account = {
 			email : email,
 			username : username,
@@ -22,11 +20,10 @@ module.exports = function({accountManager}){
 		}
 	
 		accountManager.createAccount(account,function(errors, result){
-			console.log(result)
-			console.log(errors)
+			
 		})
 		
-		response.render("accounts-sign-up.hbs")
+		response.render("accounts-sign-in.hbs")
 	})
 	
 	router.get("/sign-out", function(request,response){
@@ -61,6 +58,8 @@ module.exports = function({accountManager}){
 			}else{
 				request.session.isLoggedIn = true
 				request.session.username = username
+				request.session.uniqueId = model.account.id
+				
 				response.redirect("/")
 			}
 			
@@ -87,6 +86,7 @@ module.exports = function({accountManager}){
 				errors: errors,
 				account: account
 			}
+			
 			response.render("accounts-show-one.hbs", model)
 		})
 		

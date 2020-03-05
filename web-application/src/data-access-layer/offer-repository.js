@@ -40,6 +40,32 @@ module.exports = function({}){
 			})
 			
 		},
+
+		getOfferById : function(offerId, callback){
+			
+			const query = `SELECT * FROM offer WHERE id = ? LIMIT 1`
+			const values = [offerId]
+			
+			db.query(query, values, function(error, offers){
+				if(error){
+					callback(['databaseError'], null)
+				}else{
+					callback([], offers[0])
+				}
+			})
+			
+		},
+		getOfferByUsername : function(account_id, callback){
+			const query = `SELECT * FROM offer WHERE account_id = ?`
+			const values = [account_id]
+			db.query(query, values, function(error, offers){
+				if(error){
+					callback(['databaseError'], null)
+				}else{
+					callback([], offers)
+				}
+			})
+		},
 		/*
 			Creates a new petition.
 			Possible errors: databaseError, usernameTaken
@@ -48,12 +74,12 @@ module.exports = function({}){
 		createOffer : function(offer, accountId, petitionId, callback){
 			const active = true
 			const query = `INSERT INTO offer (title,author,commentary, place, state, photo,account_id, petition_id, active, price) VALUES (?,?,?,?,?,?,?,?,?,?)`
-			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,accountId, petitionId, active, offer.price]
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, null ,accountId, petitionId, active, offer.price]
 			
 			db.query(query, values, function(error, results){
 				if(error){
 					// TODO: Look for usernameUnique violation.
-					callback(['databaseError'], null)
+					callback(error, null)
 				}else{
 					callback([], results.insertId)
 				}
@@ -80,7 +106,7 @@ module.exports = function({}){
 		updateOffer : function(offer,id, active, callback){
 			
 			const query = `UPDATE offer SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ?, active = ?, price = ? WHERE id = ?`
-			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, offer.photo,active, offer.price,id]
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, null,active, offer.price,id]
 			
 			db.query(query, values, function(error, results){
 				if(error){

@@ -1,24 +1,24 @@
 <div class="container col-sm-9 col-md-7 col-lg-8">
-    <h2 class="text-center">Create  Petition</h2>
-    <form action="create-petition" method="POST">
+    <h2 class="text-center">Update Petition</h2>
+    <form action="{{petition.id}}" method="POST">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title" class="form-control" placeholder="Title" required autofocus>
+                <input type="text" id="title" name="title" class="form-control" value="{{petition.title}}" required autofocus>
             </div>
             <div class="form-group col-md-6">
                 <label for="author">Author</label>
-                <input type="text" id="author" name="author" class="form-control" placeholder="Author" required>
+                <input type="text" id="author" name="author" class="form-control" value="{{petition.author}}" required>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="place">Place</label>
-                <input type="text" id="place" name="place" class="form-control" placeholder="Place" required>
+                <input type="text" id="place" name="place" class="form-control" value="{{petition.place}}" required>
             </div>
             <div class="form-group col-md-6">
                 <label for="state">State of the book</label>
-                <select class="form-control" name="state" id="state" required>
+                <select class="form-control" name="state" id="state" value="{{petition.state}}" required>
                     <option value="new">New</option>
                     <option value="used">Used</option>
                     <option value="any">Any</option>
@@ -28,14 +28,14 @@
         
         <div class="form-group">
             <label for="commentary">Commentary</label>
-            <input type="text" id="commentary" name="commentary" class="form-control" placeholder="Commentary">
+            <input type="text" id="commentary" name="commentary" class="form-control" value="{{petition.commentary}}">
         </div>
         <div class="form-group">
             <label for="photo">URL Image</label>
-            <input type="text" name="photo" id="photo" class="form-control" placeholder="URL Image" value="haha">
+            <input type="text" name="photo" id="photo" class="form-control" placeholder="URL Image" value="{{petition.photo}}">
         </div>
         <div class="form-group text-center">
-            <input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Create Petition">
+            <input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Update Petition">
         </div>
     </form>
 </div>

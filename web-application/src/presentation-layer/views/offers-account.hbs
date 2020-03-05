@@ -11,15 +11,15 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-active" role="tabpanel" aria-labelledby="v-pills-home-tab">
                     <div class="row">
-                        {{#if petitionslength}}
-                            {{#each accounts}}
+                        {{#if offers.length}}
+                            {{#each offers}}
                                 <div class="col-4">
                                     <div class="card">
-                                        <img class="card-img-top" src="https://i.ytimg.com/vi/WE00soncSqw/maxresdefault.jpg" alt="">
+                                        <img class="card-img-top" src="{{image}}" alt="">
                                         <div class="card-body">
                                             <h4 class="card-title">{{title}} Ahiram</h4>
                                             <p class="card-text">{{place}}Maravilla</p>
-                                            <a href="/petitions/{{id}}" class="btn primary-btn">See More</a>
+                                            <a href="/offers/{{id}}" class="btn primary-btn">See More</a>
                                         </div>
                                     </div>
                                 </div>

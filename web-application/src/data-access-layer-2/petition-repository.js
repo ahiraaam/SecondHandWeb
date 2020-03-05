@@ -17,7 +17,7 @@ module.exports = function({}){
             })
         },
         
-        getSomePetitions : function(search, callback){
+    getSomePetitions : function(search, callback){
 			
 			database.petition.findAll({
                 where : { title :{ $like : '%'+search+'%'  } },
@@ -34,7 +34,6 @@ module.exports = function({}){
 			Success value: The fetched petitions, or null if no petition has that autor.
 		*/
 		getPetitionByUsername : function(accountId, callback){
-			
             database.petition.findAll({
                 where : { accountId : accountId},
                 raw: true
@@ -48,9 +47,8 @@ module.exports = function({}){
 			Possible errors: databaseError, usernameTaken
 			Success value: The id of the new account.
 		*/
-		createPetition : function(offer, accountId, callback){
-            
-            database.account.create({title : offer.title,author : offer.author,comentary : offer.commentary,place : offer.place, state : offer.state, photo : offer.photo, active : true, price : offer.price, accountId : accountId})
+		createPetition : function(offer, accountId, callback){   
+            database.petition.create({title : offer.title,author : offer.author,comentary : offer.commentary,place : offer.place, state : offer.state, photo : offer.photo, active : true, accountId : accountId})
             .then(function(createdPetition){callback([],createdPetition.id)})
             .catch(function(error){callback(['databaseError'], null)})
 

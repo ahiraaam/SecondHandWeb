@@ -1,6 +1,6 @@
 <div class="container col-sm-9 col-md-7 col-lg-8">
-    <h2 class="text-center">Create  Petition</h2>
-    <form action="create-petition" method="POST">
+    <h2 class="text-center">Create Offer</h2>
+    <form action="{{petitionId}}" method="POST">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="title">Title</label>
@@ -31,11 +31,12 @@
             <input type="text" id="commentary" name="commentary" class="form-control" placeholder="Commentary">
         </div>
         <div class="form-group">
-            <label for="photo">URL Image</label>
-            <input type="text" name="photo" id="photo" class="form-control" placeholder="URL Image" value="haha">
+            <label for="price">Price</label>
+            <input type="number" id="price" name="price" class="form-control" placeholder="0.0" min="1" step="any">
         </div>
+
         <div class="form-group text-center">
-            <input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Create Petition">
+            <input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Create Offer">
         </div>
     </form>
 </div>

@@ -32,8 +32,14 @@ main{
 .link:hover{
 	color: #9437C9 !important
 }
-
-.image{
+.card{
+	background-color: rgb(242, 240, 243) !important;
+}
+.image-card{
+	max-height: 10em;
+	object-fit: contain;
+}
+.image-show-one{
 	max-height: 20em;
 	object-fit: contain;
 }
@@ -41,4 +47,10 @@ main{
 .nav > .active{
 	background-color: #9437C9 !important;
 	color: white !important;
+}
+.footer{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
 }
