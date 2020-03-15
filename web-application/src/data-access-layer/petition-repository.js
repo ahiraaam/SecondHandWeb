@@ -23,12 +23,12 @@ module.exports = function({}){
 
 		getSomePetitions : function(search, callback){
 			
-			const query = `SELECT * FROM petitions WHERE title LIKE %?%`
+			const query = `SELECT * FROM petitions WHERE title LIKE ? and active = true`
 			const values = [search]
 			
 			db.query(query, values, function(error, petitions){
 				if(error){
-					callback(['databaseError'], null)
+					callback("Something went wrong", null)
 				}else{
 					callback([], petitions)
 				}
@@ -126,14 +126,13 @@ module.exports = function({}){
 					// TODO: Look for usernameUnique violation.
 					callback(['databaseError'], null)
 				}else{
-					callback([], results.insertId)
+					callback([], results)
 				}
 			})
 			
 		},
 
 		deletePetition : function(petition_id,callback){
-			
 			const query = `DELETE FROM petitions WHERE id = ?`
 			const values = [petition_id]
 			
@@ -160,10 +159,21 @@ module.exports = function({}){
 					callback([], results)
 				}
 			})
-			
+		},
+
+		updatePetitionStatus : function(id,callback){
+			const query = `UPDATE petitions SET active = false WHERE id = ?`
+			const values = [id]
+			db.query(query,values,function(error,results){
+				if(error){
+					callback([error],null)
+				}else{
+					callback([],results)
+				}
+			})
+
 		}
 	
-		
 	}
 
 }

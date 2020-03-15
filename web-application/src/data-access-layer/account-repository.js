@@ -26,6 +26,20 @@ module.exports = function({}){
 			Possible errors: databaseError
 			Success value: The fetched account, or null if no account has that username.
 		*/
+		getAccountById : function(id, callback){
+			
+			const query = `SELECT * FROM accounts WHERE id = ? LIMIT 1`
+			const values = [id]
+			
+			db.query(query, values, function(error, accounts){
+				if(error){
+					callback(['databaseError'], null)
+				}else{
+					callback([], accounts[0])
+				}
+			})
+			
+		},
 		getAccountByUsername : function(username, callback){
 			
 			const query = `SELECT * FROM accounts WHERE username = ? LIMIT 1`
@@ -47,30 +61,46 @@ module.exports = function({}){
 			Success value: The id of the new account.
 		*/
 		createAccount : function(account, callback){
-			
-			const query = `INSERT INTO accounts (email,username, password) VALUES (?, ?,?)`
-			const values = [account.email, account.username, account.password]
-			
-			db.query(query, values, function(error, results){
-				if(error){
+
+			const queryCheck = `SELECT * FROM accounts WHERE username = ? LIMIT 1`
+			const valuesCheck = [account.username]
+			db.query(queryCheck, valuesCheck, function(errorCheck, resultsCheck){
+
+				if(0 < resultsCheck.length){
 					// TODO: Look for usernameUnique violation.
-					callback(['databaseError'], null)
+					callback(["Username already taken. Please choose another one"], null)
+
+				}else if (0 == resultsCheck.length){
+
+					const query = `INSERT INTO accounts (email,username, password) VALUES (?,?,?)`
+					const values = [account.email, account.username, account.password]
+					
+					db.query(query, values, function(error, results){
+						if(error){
+							// TODO: Look for usernameUnique violation.
+							callback(error, null)
+						}else{
+							callback([], results.insertId)
+						}
+					})					
+
 				}else{
-					callback([], results.insertId)
+					callback(["Error with database1"], null)
 				}
 			})
+
+			
 			
 		},
 
-		deleteAccount : function(username,callback){
+		deleteAccount : function(accountId,callback){
 			
-			const query = `DELETE FROM accounts WHERE username = ?`
-			const values = [username]
+			const query = `DELETE FROM accounts WHERE id = ?`
+			const values = [accountId]
 			
 			db.query(query, values, function(error, results){
 				if(error){
-					// TODO: Look for usernameUnique violation.
-					callback(['databaseError'], null)
+					callback([error], null)
 				}else{
 					callback([], null)
 				}

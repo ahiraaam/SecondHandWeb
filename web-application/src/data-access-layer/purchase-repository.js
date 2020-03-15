@@ -20,20 +20,16 @@ module.exports = function({}){
 
         createPurchase : function(purchase,account_id,petition_id,offer_id,callback){
 
-            const query = `INSERT INTO purchases (direction,offer_id,petition_id,account_id) VALUES (?,?,?,?)`
-            const values = [purchase.direction,offer_id,petition_id,account_id]
+            const query = `INSERT INTO purchases (street,city,zip,country,offer_id,petition_id,account_id) VALUES (?,?,?,?,?,?,?)`
+            const values = [purchase.street,purchase.city,purchase.zip,purchase.country,offer_id,petition_id,account_id]
 
             db.query(query,values,function(error, results){
                 if(error){
-                    callback(['databaseError'],null)
+                    callback([error],null)
                 }else{
-                    callback([],results.insertId)
+                    callback([],results)
                 }
             })
-
-
         }
-
-
     }
 }

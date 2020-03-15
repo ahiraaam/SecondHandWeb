@@ -8,7 +8,7 @@ const sessions = require('express-session')
 let RedisStore = require('connect-redis')(sessions)
 let RedisClient = redis.createClient(6379,"redis")
 
-module.exports = function({accountRouter,variousRouter,petitionRouter,offerRouter}){
+module.exports = function({accountRouter,variousRouter,petitionRouter,offerRouter, purchaseRouter}){
 
 	const app = express()
 	app.use(bodyParser.json())
@@ -38,6 +38,7 @@ module.exports = function({accountRouter,variousRouter,petitionRouter,offerRoute
 	app.use('/accounts', accountRouter)
 	app.use('/petitions', petitionRouter)
 	app.use('/offers', offerRouter)
+	app.use('/purchase', purchaseRouter)
 
 	// Start listening for incoming HTTP requests!
 	

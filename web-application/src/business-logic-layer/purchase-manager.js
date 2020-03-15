@@ -10,7 +10,5 @@ module.exports = function({purchaseRepository}){
             purchaseRepository.createPurchase(purchase,account_id,petition_id,offer_id,callback)
         }
 
-
-
     }
 }

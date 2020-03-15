@@ -1,0 +1,76 @@
+<div class="container col-sm-9 col-md-7 col-lg-8">
+    <h2 class="text-center">Complete Purchase</h2>
+    <div class="row">
+        <div class="col-12 card">
+            <h5 class="text-center">Order Details</h5>
+            {{#if offer}}
+                <div class="row">
+                    <div class="col-6">
+                        <p>Title: {{offer.title}}</p>
+                        <p>Author: {{offer.author}}</p>
+                    </div>
+                    <div class="col-6">
+                        <p>State: {{offer.state}}</p>
+                        <p>Price: ${{offer.price}}</p>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <form action="" method="POST">
+                <h4 class="text-center">Address</h4>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" id="street" name="street" class="form-control" placeholder="Street Address" required autofocus>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" id="address2" name="address2" class="form-control" placeholder="Street Address Line 2" >
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" id="city" name="city" class="form-control" placeholder="City" required >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" id="region" name="region" class="form-control" placeholder="Region" >                
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" id="zip" name="zip" class="form-control" placeholder="ZIP Code" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="text" id="country" name="country" class="form-control" placeholder="Country" required>                
+                    </div>
+                </div>
+                <h4 class="text-center">Payment</h4>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="card_name">Name on Card</label>
+                        <input type="text" id="card_name" name="card_name" class="form-control" placeholder="Name on Card" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="card_number">Card Number(XXXX-XXXX-XXXX-XXXX)</label>
+                        <input  type="number" id="card_number" name="card_number" class="form-control" placeholder="Card Number"  required>                
+                    </div>
+                </div> 
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="card_number">Expiration Day (MM/YY)</label>
+                        <input type="text" id="expiration" name="expiration" class="form-control" placeholder="Expiration" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="card_number">CVC (XXX)</label>
+                        <input type="text" id="cvc" name="cvc" class="form-control" placeholder="CVC" required>                
+                    </div>
+                </div>       
+                <div class="form-group text-center">
+                    <input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Complete Purchase">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

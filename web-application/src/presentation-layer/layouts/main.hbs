@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>The Community</title>
 	<link rel="stylesheet" href="/css/layout.css">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -12,23 +13,23 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm primary-color navbar-dark">
+		<nav class="navbar navbar-expand-sm primary-color navbar-dark ">
 			<!-- Brand/logo -->
 				<a class="btn primary-btn my-2 my-sm-0 my-lg-0 mr-auto" href="/petitions/create-petition">Create Petition</a>
 				<a class="navbar-brand mx-auto" href="/">
 					<img src="/images/book.svg" alt="logo" style="width:50px;">
 					SeLec
 				</a>
-			<ul class="navbar-nav mr-5 ml-auto">
+			<ul class="navbar-nav mr-3 ml-auto">
 				{{#if isLoggedIn}}
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 							{{username}}
 						</a>
-						<div class="dropdown-menu">
+						<div class="dropdown-menu dropdown-menu-right">
 							<a class="dropdown-item" href="/petitions/user/{{accountId}}">My Petitions</a>
 							<a class="dropdown-item" href="/offers/user/{{accountId}}">My Offers</a>
-							<a class="dropdown-item" href="#">My Account</a>
+							<a class="dropdown-item" href="/accounts/{{accountId}}">My Account</a>
 							<a class="dropdown-item" href="/accounts/sign-out">Log Out</a>
 						</div>
 					</li>
@@ -42,14 +43,14 @@
 			</ul>
 		</nav>
 	</header>
-	<main>
+
+	<main >
 		{{{body}}}
 	</main>
-
-		<footer class="col-12 font-small primary-color text-white "> 
+	<footer class="font-small primary-color text-white footer navbar-fixed-bottom"> 
 			<div class="footer-copyright text-center py-3">© 2020 Copyright:
-				<a> Ahiram es la mejor persona de este planeta</a>
+				Made in Jönköping University by Ahiram Cruz and Juan Carlos Pichardo
 			</div>
-		</footer>
+	</footer>
 </body>
 </html>

@@ -5,44 +5,35 @@
             <div class="col-12 col-md-6">
                 <h2 class="text-center">{{petition.title}}</h2>
                 <img class="col-12 image-show-one "src="{{petition.photo}}" alt="">
+                {{#if isMine}}
+                    
+                {{else}}
+                    <div class="col text-center">
+                        <a class="btn btn-lg btn-block"href="../offers/create-offer/{{petition.id}}">
+                            <button class="btn btn-block primary-btn" >Offer</button>
+                        </a>
+                    </div>
+                {{/if}}
             </div>
-            <div class="col-12 col-md-6 py-5">
+            <div class="col col-md-6 py-5">
                 <h4>Author: {{petition.author}}</h4>
                 <h4>Place: {{petition.place}}</h4>
                 <h4>State: {{petition.state}}</h4>
                 <p>Commentary: {{petition.commentary}}</p>
-                {{#if isMine}}
-                    <div class="text-center">
-                        <a class="btn btn-lg btn-block" href="update-petition/{{petition.id}}">
-                            <button class="btn btn-lg btn-block primary-btn" >Edit Petition</button>
-                        </a>
+                <h3>Offers for this petition</h3>
+                {{#if offers.length}}
+                    <div class="list-group">
+                        {{#each offers}}
+                            <a class="list-group-item list-group-item-action" href="../offers/{{id}}">
+                                {{title}} - ${{price}}
+                            </a>
+                        {{/each}}
                     </div>
                 {{else}}
-                    <div class="text-center">
-                        <a class="btn btn-lg btn-block "href="../offers/create-offer/{{petition.id}}">
-                            <button class="btn btn-lg btn-block primary-btn" >Offer</button>
-                        </a>
-                    </div>
+                    <p>No offers exist yet.</p>
                 {{/if}}
-                
             </div>
         {{/if}}
 
-    </div>
-    <div class="row py-5">
-        <div class="col">
-            <h3>Offers for this petition</h3>
-            {{#if offers.length}}
-                <div class="list-group ">
-                    {{#each offers}}
-                        <a class="list-group-item list-group-item-action" href="../offers/{{id}}">
-                            {{title}} - ${{price}}
-                        </a>
-                    {{/each}}
-                </div>
-            {{else}}
-                <p>No offers exist yet.</p>
-            {{/if}}
-        </div>
     </div>
 </div>

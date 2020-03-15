@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <form method="POST" action="/search-petition/">
+    <form method="POST" action="/petitions/search-petition">
         <div class="row justify-content-md-center">
             <div class="col-md-5 col-10">
                 <input type="text" class="form-control" id="searchPetition" placeholder="Search petition" name="searchPetition">
@@ -14,7 +14,7 @@
         <div class="row">
             {{#if petitions.length}}
                 {{#each petitions}}
-                    <div class="col-md-4 my-3">
+                    <div class="col-md-4 my-2">
                         <div class="card" style="height: 22em">
                             <img class="card-img-top image-card mt-3" src="{{photo}}" alt="">
                             <div class="card-body">
@@ -23,10 +23,15 @@
                                 <a href="/petitions/{{id}}" class="btn btn-block primary-btn">See More</a>
                             </div>
                         </div>
-                    </div>    
+                    </div>  
+
                 {{/each}}
             {{else}}
-                <h3>No petitions yet</h3>
+                <div class="col-md-6 mx-auto text-center">
+                        <h3 class="text-center">No petitions yet</h3>
+                        <h5>Come back later</h5>
+                        <img src="images/clock.svg" alt="" class="image-card my-3">
+                </div>
             {{/if}}
         </div>
     </div>

@@ -1,22 +1,38 @@
-<div class="container">
-    <h2 class="text-center">Offer</h2>
+<div class="container-fluid">
+    <h2 class="text-center">Offer Details</h2>
     <div class="row py-3">
         {{#if offer}}
-            <div class="col-12 col-md-6 mx-auto">
-                <h3>{{offer.title}}</h1>
-                <h4>{{offer.author}}</h3>
-                <h4>{{offer.place}}</h3>
-                <h4>{{offer.state}}</h4>
-                <p>{{offer.commentary}}</p>
-                <h4 class="my-3" name="price" id="price">${{offer.price}}</h4>
-                {{#if isMine}}
-                    <div class="text-center ">
-                        <button class="btn btn-lg btn-block primary-btn ">Accept</button>
+        <div class="col-12 card-deck">
+            <div class="text-center card">
+                <h3 class="text-left ml-3">  Offer:</h3>
+                <h4>Title: {{offer.title}}</h4>
+                <h5>Author: {{offer.author}}</h5>
+                <h5>Place: {{offer.place}}</h5>
+                <h5>State of book: {{offer.state}}</h5>
+                <p>Commentary: {{offer.commentary}}</p>
+                <h5 class="my-3" name="price" id="price">Price: ${{offer.price}}</h5>
+                {{#if petitionIsMine}}
+                    <div class="col text-center">
+                        <a class="btn" href="/purchase/{{offer.id}}/{{offer.petition_id}}">
+                            <button class="btn btn-lg btn-block primary-btn">Accept</button>
+                        </a>
                     </div>
                 {{/if}}
             </div>
+            <div class="text-center card">
+                <h3 class="text-left ml-3">Petition Associated:</h3>
+                {{#if petition}}
+                    <h4>Title: {{petition.title}}</h4>
+                    <h5>Author: {{petition.author}}</h5>
+                    {{#if petition.photo}}
+                        <img class="image-card mb-3" src="{{petition.photo}}" alt="">
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+        
         {{else}}
-            <p>No offer found</p>
-        {{/if}}
+            <p class="text-center">No offer found</p>
+        {{/if}}    
     </div>
 </div>

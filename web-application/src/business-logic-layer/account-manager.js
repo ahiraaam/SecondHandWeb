@@ -5,11 +5,11 @@ module.exports = function({accountRepository,accountValidator}){
 			accountRepository.getAllAccounts(callback)
 		},
 		
-		getAccountByUsername : function(username, callback){
-			accountRepository.getAccountByUsername(username, callback)
+		getAccountById : function(id, callback){
+			accountRepository.getAccountById(id, callback)
 		},
 		
-		ValidateSignIn : function(username ,password, callback){
+		ValidateSignIn : function(username,password, callback){
 			accountRepository.getAccountByUsername(username,function(errors, account){
 				const model = {
 					errors: errors,
@@ -34,7 +34,6 @@ module.exports = function({accountRepository,accountValidator}){
 		},
 		
 		createAccount : function(account, callback){
-			
 			// Validate the account.
 			const errors = accountValidator.getErrorsNewAccount(account)
 			
@@ -42,9 +41,15 @@ module.exports = function({accountRepository,accountValidator}){
 				callback(errors, null)
 				return
 			}
-			
-			accountRepository.createAccount(account, callback)
-			
+			accountRepository.createAccount(account, function(error,results){
+				if(0 < error.length){
+					callback(error, null)
+					return
+				}else{
+					callback(null, results)
+					return
+				}
+			})
 		},
 
 		deleteAccount : function(username,callback){

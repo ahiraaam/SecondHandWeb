@@ -66,6 +66,30 @@ module.exports = function({}){
 				}
 			})
 		},
+		getActiveOffersByUsername: function(account_id,callback){
+			const query = `SELECT * FROM offer WHERE account_id = ? AND active = true` 
+			const values = [account_id]
+
+			db.query(query,values,function(error,offers){
+				if(error){
+					callback([error],null)
+				}else{
+					callback([],offers)
+				}
+			})
+		},
+		getInactiveOffersByUsername: function(account_id,callback){
+			const query = `SELECT * FROM offer WHERE account_id = ? AND active = false` 
+			const values = [account_id]
+
+			db.query(query,values,function(error,offers){
+				if(error){
+					callback([error],null)
+				}else{
+					callback([],offers)
+				}
+			})
+		},
 		/*
 			Creates a new petition.
 			Possible errors: databaseError, usernameTaken
@@ -103,20 +127,30 @@ module.exports = function({}){
 		},
 
 
-		updateOffer : function(offer,id, active, callback){
+		updateOffer : function(offer,id, callback){
 			
 			const query = `UPDATE offer SET title = ?,author = ?,commentary = ?, place = ?, state = ?, photo = ?, active = ?, price = ? WHERE id = ?`
-			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, null,active, offer.price,id]
+			const values = [offer.title,offer.author,offer.commentary, offer.place, offer.state, null,true, offer.price,id]
 			
 			db.query(query, values, function(error, results){
 				if(error){
 					// TODO: Look for usernameUnique violation.
-					callback(['databaseError'], null)
+					callback(error, null)
 				}else{
 					callback([], results.insertId)
 				}
 			})
-			
+		},
+		updateOfferStatus: function(id,callback){
+			const query = `UPDATE offer SET active = false WHERE id = ?`
+			const values = [id]
+			db.query(query,values,function(error,results){
+				if(error){
+					callback([error],null)
+				}else{
+					callback([],results)
+				}
+			})
 		}
 
 	

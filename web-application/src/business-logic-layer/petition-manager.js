@@ -24,11 +24,8 @@ module.exports = function({petitionRepository}){
 		getAccountOfPetition: function(id,callback){
 			petitionRepository.getAccountOfPetition(id,callback)
 		},
-
 		createPetition : function(petition, accountId, callback){
-			
 			petitionRepository.createPetition(petition, accountId, callback)
-			
 		},
 
 		deletePetition : function(petition_id, callback){
@@ -40,6 +37,10 @@ module.exports = function({petitionRepository}){
 		updatePetition : function(petition,id,callback){
 
 			petitionRepository.updatePetition(petition, id , callback)
+		},
+
+		updatePetitionStatus: function(id,callback){
+			petitionRepository.updatePetitionStatus(id,callback)
 		}
 
 		
