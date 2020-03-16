@@ -4,23 +4,27 @@ const OfferModel = require('./models/offer')
 const PetitionModel = require('./models/petition')
 const PurchaseModel = require('./models/purchases')
 
+const db = {};
+
 const sequelize = new Sequelize('webAppDatabase','root','theRootPassword',{
     host: 'postgres',
     dialect: 'postgres',
 })
+
+
 
 const Account = AccountModel(sequelize,Sequelize)
 const Offer = OfferModel(sequelize,Sequelize)
 const Petition = PetitionModel(sequelize,Sequelize)
 const Purchase = PurchaseModel(sequelize,Sequelize)
 
-Petition.belongsTo(Account,{foreignKey: 'accountId'})
-Offer.belongsTo(Account,{foreignKey: 'accountId'})
-Offer.belongsTo(Petition,{foreignKey: 'petitionId'})
+Petition.belongsTo(Account,{foreignKey: 'account_id'})
+Offer.belongsTo(Account,{foreignKey: 'account_id'})
+Offer.belongsTo(Petition,{foreignKey: 'petition_id'})
 
-Purchase.belongsTo(Account,{foreignKey: 'accountId'})
-Purchase.belongsTo(Petition,{foreignKey: 'petitionId'})
-Purchase.belongsTo(Offer,{foreignKey: 'offerId'})
+Purchase.belongsTo(Account,{foreignKey: 'account_id'})
+Purchase.belongsTo(Petition,{foreignKey: 'petition_id'})
+Purchase.belongsTo(Offer,{foreignKey: 'offer_id'})
 
 sequelize.sync({ force: true })
   .then(() => {

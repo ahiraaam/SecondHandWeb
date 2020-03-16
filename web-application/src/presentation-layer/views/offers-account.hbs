@@ -53,7 +53,14 @@
                                         <div class="card-body">
                                             <h4 class="card-title">{{title}} </h4>
                                             <p class="card-text">{{place}}</p>
-                                            <a href="" class="btn primary-btn">See Purchase</a>
+                                            <div class="row">
+                                                <div class="col-6 text-center">
+                                                        <a href="/offers/{{id}}" class="btn primary-btn">See Details</a>
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <a href="/purchase/offers/{{id}}" class="btn primary-btn">See Purchase</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

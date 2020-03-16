@@ -20,17 +20,19 @@
                 <h4>Place: {{petition.place}}</h4>
                 <h4>State: {{petition.state}}</h4>
                 <p>Commentary: {{petition.commentary}}</p>
+                {{#if petitionActive}}
                 <h3>Offers for this petition</h3>
-                {{#if offers.length}}
-                    <div class="list-group">
-                        {{#each offers}}
-                            <a class="list-group-item list-group-item-action" href="../offers/{{id}}">
-                                {{title}} - ${{price}}
-                            </a>
-                        {{/each}}
-                    </div>
-                {{else}}
-                    <p>No offers exist yet.</p>
+                    {{#if offers.length}}
+                        <div class="list-group">
+                            {{#each offers}}
+                                <a class="list-group-item list-group-item-action" href="../offers/{{id}}">
+                                    {{title}} - ${{price}}
+                                </a>
+                            {{/each}}
+                        </div>
+                    {{else}}
+                        <p>No offers exist yet.</p>
+                    {{/if}}
                 {{/if}}
             </div>
         {{/if}}

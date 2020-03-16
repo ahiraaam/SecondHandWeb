@@ -1,5 +1,5 @@
 const express = require('express')
-
+const LOG_ERROR = "You have to be logged in"
 module.exports = function({petitionManager,offerManager}){
     const router = express.Router()
 
@@ -16,28 +16,34 @@ module.exports = function({petitionManager,offerManager}){
                 offerIsMine: false,
                 petition: null
             }
-            if(model.offer != null){
-                const petitionId = model.offer.petition_id
-                if(model.offer.account_id == model.accountId){
-                    model.offerIsMine = true
-                }
-                petitionManager.getPetitionById(petitionId,function(errors,result){
-                    if(result){
-                        if(model.accountId == result.account_id){
-                            model.petitionIsMine = true
-                        }
-                        model.petition = result
-                        response.render("offer-show-one.hbs",model)
-                    }else{
-                        //TODO
+            if(model.errors != null){
+                if(model.offer != null){
+                    const petitionId = model.offer.petition_id
+                    if(model.offer.account_id == model.accountId){
+                        model.offerIsMine = true
                     }
-                   
-                })
+                    petitionManager.getPetitionById(petitionId,function(errors,result){
+                        if(result){
+                            if(model.accountId == result.account_id){
+                                model.petitionIsMine = true
+                            }
+                            model.petition = result
+                            response.render("offer-show-one.hbs",model)
+                        }else{
+                            response.render("error.hbs")
+                        }
+                       
+                    })
+                }else{
+                    response.render("error.hbs")
+                }  
             }else{
-                response.render("home.hbs")
-            }   
+                response.render("error.hbs")
+            }
+             
         })
     })
+
     router.get("/create-offer/:offerId", function(request,response){
         if(request.session.isLoggedIn){
             response.render("offer-create-offer.hbs", {
@@ -49,10 +55,12 @@ module.exports = function({petitionManager,offerManager}){
             response.redirect("/accounts/sign-in")
         }
     })
+
     router.post("/create-offer/:offerId",function(request,response){
         const {title,author,place,state,commentary,price} = request.body
         const offerId = request.params.offerId
         const accountId = request.session.uniqueId
+        const isLoggedIn = request.session.isLoggedIn
         const offer = {
             title: title,
             author: author,
@@ -61,9 +69,24 @@ module.exports = function({petitionManager,offerManager}){
             commentary: commentary,
             price: price
         }
-        offerManager.createOffer(offer, accountId, offerId, function(errors,result){
-        })
-        response.redirect("/")
+        if(isLoggedIn){
+            offerManager.createOffer(offer, accountId, offerId, function(errors,result){
+                const model={
+                    isLoggedIn: isLoggedIn,
+                    accountId: accountId,
+                    username: request.session.username
+                }
+                if(result){
+                    response.render("offer-success.hbs",model)
+                }else{
+                    response.render("error.hbs")
+
+                }
+            })
+        }else{
+            const error = {error:LOG_ERROR}
+            response.render("error.hbs",error)
+        }
     })
 
     router.get("/user/:accountId",function(request,response){

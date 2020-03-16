@@ -16,7 +16,5 @@ module.exports = function({petitionManager}){
 			response.render("petitions.hbs", model)
         })
 	})
-
- 	 return router
-  
+ 	return router
 }

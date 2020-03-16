@@ -1,5 +1,5 @@
 <div class="content">
-<h1>Account</h1>
+<h1>My account</h1>
 {{#if errors.length}}
 	<p>Oh no, something went wrong:</p>
 	<ul>
@@ -10,22 +10,40 @@
 {{else}}
 	
 	{{#if account}}
-		<dl>
-			
-			<dt>Id:</dt>
-			<dd>{{account.id}}</dd>
-			
-			<dt>Username:</dt>
-			<dd>{{account.username}}</dd>
+		<div class="card col-6 mx-auto my-3 py-3">
+			<h6>Id:</h6>
+			<p>{{account.id}}</p>
+			<h6>Username:</h6>
+			<p>{{account.username}}</p>
+			<div class="row text-center">
+				<form class="col-md-6 text-center" action="delete-account" method="POST">
+					<button class="btn delete-btn" type="submit">Delete Account</button>
+				</form>
+				<!--
+				<div class="col-md-6 text-center">
+					<button id="change_password"class="btn primary-btn text-center">Change password</button>
 
-			<form action="delete-account" method="POST">
-				<button type="submit">Delete Account</button>
-			</form>
-			
-		</dl>
+				</div>
+				<form class="form col text-center" id="form_change_password" method="POST"  action="update-account" style="display: none;">
+					<div class="form-group col">
+						<label for="newPassword">New Password</label>
+						<input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="New Password" required autofocus>
+					</div>
+					<div class="form-group col">
+						<label for="confirmNewPassword">Confirm New Password</label>
+						<input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="Confirm New Password" required autofocus>
+					</div>
+					<div class="form-group text-center">
+            			<input class="btn primary-btn text-uppercase" type="submit" value="Update Password">
+        			</div>
+				</form>
+				-->
+			</div>	
+		</div>
 	{{else}}
 		<p>No, that account doesn't exist.</p>
 	{{/if}}
 	
 {{/if}}
 </div>
+<script src="/js/index.js"></script>

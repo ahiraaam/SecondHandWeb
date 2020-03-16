@@ -4,6 +4,67 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
   
  	const router = express.Router()
   
+    router.get("/petitions/:petitionId",function(request,response){
+        const petitionId = request.params.petitionId
+        const isLoggedIn= request.session.isLoggedIn
+        const username= request.session.username
+        const accountId= request.session.uniqueId
+        var petition = null
+        var offer = null
+        var purchase = null
+        purchaseManager.getPurchasesByPetition(petitionId,function(error,result){
+            purchase = result
+            offerManager.getOfferById(purchase.offer_id,function(error,result){
+                offer = result
+                petitionManager.getPetitionById(purchase.petition_id,function(error,result){
+                    petition = result
+                    const model = {
+                        isLoggedIn:isLoggedIn,
+                        username:username,
+                        accountId:accountId,
+                        petition:petition,
+                        offer:offer,
+                        purchase:purchase
+                    }
+                    console.log(model.purchase)
+                    console.log(model.purchase)
+                    response.render("purchase-show-one.hbs",model)  
+                })
+            })
+        })
+
+    })
+
+    router.get("/offers/:offerId",function(request,response){
+        const offerId = request.params.offerId
+        const isLoggedIn= request.session.isLoggedIn
+        const username= request.session.username
+        const accountId= request.session.uniqueId
+        var petition = null
+        var offer = null
+        var purchase = null
+        purchaseManager.getPurchasesByOffer(offerId,function(error,result){
+            purchase = result
+            offerManager.getOfferById(purchase.offer_id,function(error,result){
+                offer = result
+                petitionManager.getPetitionById(purchase.petition_id,function(error,result){
+                    petition = result
+                    const model = {
+                        isLoggedIn:isLoggedIn,
+                        username:username,
+                        accountId:accountId,
+                        petition:petition,
+                        offer:offer,
+                        purchase:purchase
+                    }
+                    console.log(model.purchase)
+                    console.log(model.purchase)
+                    response.render("purchase-show-one.hbs",model)  
+                })
+            })
+        })
+    })
+
 	router.get("/:offerId/:petitionId", function(request, response){
         const offerId = request.params.offerId
         const model = {
@@ -14,7 +75,7 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
         }
         offerManager.getOfferById(offerId,function(error,offer){
             model.offer = offer
-            response.render("purchase.hbs", model)
+            response.render("purchase-create.hbs", model)
         })
     })
     
@@ -28,6 +89,7 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
         const city = request.body.city
         const zip = request.body.zip
         const country = request.body.country
+        const model ={accountId,username,isLoggedIn}
         const purchase = { //TODO
             street: street,
             city: city,
@@ -60,7 +122,7 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
                             response.render("purchase-success.hbs",model)
                         })
                     }else{
-                        response.render("accounts-list-all.hbs")  //TODO, enviar a página de no autorización
+                        response.render("accounts-list-all.hbs",model)  //TODO, enviar a página de no autorización
                     }
                 })
                 

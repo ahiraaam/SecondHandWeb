@@ -1,5 +1,6 @@
 const express = require('express')
 
+
 module.exports = function({petitionManager, offerManager}){
     const router = express.Router()
 
@@ -44,17 +45,20 @@ module.exports = function({petitionManager, offerManager}){
             const model = {
 				errors: errors,
                 petition: petition,
+                petitionActive: null,
                 isLoggedIn: request.session.isLoggedIn,
                 username: request.session.username,
                 accountId: accountId,
                 offers: null,
                 isMine: false
             }
+            if(model.petition.active == true){
+                model.petitionActive = true
+            }
+            if(accountId == model.petition.account_id){
+                model.isMine = true
+            }
             offerManager.getOfferByPetition(id,function(errors,offers){
-                if(request.session.uniqueId == model.petition.account_id){
-                    model.isMine = true
-                }
-                
                 model.offers = offers
                 response.render("petition-show-one.hbs",model)
             })
@@ -104,7 +108,7 @@ module.exports = function({petitionManager, offerManager}){
                 if(model.petitions != null){
                     response.render("petitions.hbs", model)
                 }else{
-                    response.render("accounts-list-all.hbs")
+                    response.render("petitions.hbs",model)
                 }
             })            
         }
