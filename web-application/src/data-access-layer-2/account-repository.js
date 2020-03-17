@@ -12,7 +12,6 @@ const database = require('./db')
       getAllAccounts : function(callback){
         const palabra = "Alice"
         database.account.findAll({
-          where : { username :{ $like : '%Alice'  } },
           raw: true
         })
         .then(function(allAcounts){callback([],allAcounts)})
@@ -27,13 +26,25 @@ const database = require('./db')
         Possible errors: databaseError
         Success value: The fetched account, or null if no account has that username.
       */
+     getAccountById : function(id, callback){
+
+      database.account.findOne({
+        where : {id : id},
+        raw: true
+      })
+      .then(function(Account){callback([],Account)})
+      .catch(function(error){callback(['databaseError'], null)})
+      
+    },
       getAccountByUsername : function(username, callback){
 
         database.account.findOne({
           where : {username : username},
           raw: true
         })
-        .then(function(Account){callback([],Account)})
+        .then(function(Account){
+          console.log(Account)
+          callback([],Account)})
         .catch(function(error){callback(['databaseError'], null)})
         
       },
@@ -46,17 +57,39 @@ const database = require('./db')
         Success value: The id of the new account.
       */
       createAccount : function(account, callback){
-        
-        database.account.create({email:account.email,username: account.username,password: account.password})
+        console.log(account);
+        database.account.findOne({
+          where : {username : account.username},
+          raw: true
+           })
+          .then(function(Accounts){
+            
+          if(null != Accounts){
+            callback(["Username already taken. Please choose another one"], null)
+          }else if ( null == Accounts){
+
+          database.account.create({email:account.email,username: account.username,password: account.password})
           .then(function(createdAccount){callback([],createdAccount.id)})
-          .catch(function(error){callback(['databaseError'], null)})
+          .catch(function(error){callback(['databaseError1'], null)})
+
+          }else{
+            callback(['databaseError2'], null)
+          }
+            
+          })
+          .catch(function(error){
+            console.log(error)
+            console.log(error)
+            callback(['databaseError3'], null)})
+
+        
         
       },
 
-      deleteAccount : function(username,callback){
+      deleteAccount : function(id,callback){
         
         database.account.destroy({
-          where : {username : username}
+          where : {id: id}
         })
         .then(function(){callback([],null)})
         .catch(function(error){callback(['databaseError'], null)})

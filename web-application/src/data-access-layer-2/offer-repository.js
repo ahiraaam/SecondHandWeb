@@ -1,5 +1,5 @@
 const { Sequelize , Model, DataTypes } = require('sequelize')
-const db = require('./db')
+const database = require('./db')
 
 
 module.exports = function({}){
@@ -22,10 +22,51 @@ module.exports = function({}){
 			Possible errors: databaseError
 			Success value: The fetched petitions, or null if no petition has that autor.
 		*/
-		getOfferByPetition : function(petitionId, callback){
+		getOfferByPetition : function(petition_id, callback){
 			
             database.offer.findAll({
-                where : { id : petitionId},
+                where : { petition_id : petition_id},
+                raw: true
+              })
+              .then(function(Offers){callback([],Offers)})
+              .catch(function(error){callback(['databaseError'], null)})
+			
+		},
+
+		getOfferById : function(offer_id, callback){
+			
+            database.offer.findAll({
+                where : { id : offer_id},
+                raw: true
+              })
+              .then(function(Offers){callback([],Offers[0])})
+              .catch(function(error){callback(['databaseError'], null)})
+			
+		},
+		getOfferByUsernme : function(account_id, callback){
+			
+            database.offer.findAll({
+                where : { account_id : account_id},
+                raw: true
+              })
+              .then(function(Offers){callback([],Offers)})
+              .catch(function(error){callback(['databaseError'], null)})
+			
+		},
+		getActiveOffersByUsername : function(account_id, callback){
+			
+            database.offer.findAll({
+                where : { account_id : account_id, active : true},
+                raw: true
+              })
+              .then(function(Offers){callback([],Offers)})
+              .catch(function(error){callback(['databaseError'], null)})
+			
+		},
+		getInactiveOffersByUsername : function(account_id, callback){
+			
+            database.offer.findAll({
+                where : { account_id : account_id, active : false},
                 raw: true
               })
               .then(function(Offers){callback([],Offers)})
@@ -37,9 +78,9 @@ module.exports = function({}){
 			Possible errors: databaseError, usernameTaken
 			Success value: The id of the new account.
 		*/
-		createOffer : function(offer, accountId, petitionId, callback){
+		createOffer : function(offer, account_id, petition_id, callback){
             
-            database.account.create({title : offer.title,author : offer.author,comentary : offer.commentary,place : offer.place, state : offer.state, photo : offer.photo, active : true, price : offer.price, accountId : accountId, petitionId : petitionId})
+            database.offer.create({title : offer.title,author : offer.author,comentary : offer.commentary,place : offer.place, state : offer.state, photo : offer.photo, active : true, price : offer.price, account_id : account_id, petition_id : petition_id})
             .then(function(createdOffer){callback([],createdOffer.id)})
             .catch(function(error){callback(['databaseError'], null)})
 
@@ -58,24 +99,33 @@ module.exports = function({}){
 		},
 
 
-		updateOffer : function(offer,id,active, callback){
+		updateOffer : function(offer,id, callback){
 			
-			database.offer.update({
+		database.offer.update({
                 title: offer.title,
                 author: offer.author,
                 commentary:offer.commentary,
                 place: offer.place,
                 state: offer.state,
                 photo : offer.photo,
-                active: active,
-                price: offer.price
-            },{
+                price: offer.price            },{
                 where : {id : id}
             })
             .then(function(Offer){callback([],Offer.id)})
             .catch(function(error){callback(['databaseError'], null)})
 			
-		}
+            },
+            updateOfferStatus : function(id, callback){
+			
+			database.offer.update({
+                active: false
+            },{
+                where : {id : id}
+            })
+            .then(function(Petition){callback([],Petition)})
+            .catch(function(error){callback(['databaseError'], null)})
+            
+        }
 
 	
 		

@@ -1,51 +1,74 @@
 <div class="container-fluid">
    <h2 class="text-center">My Offers</h2>
     <div class="row">
-        <div class="col-3">
+        <div class="col-md-3">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <a class="nav-link active text-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-active" role="tab" aria-controls="v-pills-active" aria-selected="true">Active</a>
                 <a class="nav-link text-center" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-done" role="tab" aria-controls="v-pills-done" aria-selected="false">Done</a>
             </div>
         </div>
-       <div class="col-9">
+       <div class="col-md-9 overflow-auto">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-active" role="tabpanel" aria-labelledby="v-pills-home-tab">
                     <div class="row">
-                        {{#if offers.length}}
-                            {{#each offers}}
-                                <div class="col-4">
-                                    <div class="card">
-                                        <img class="card-img-top" src="{{image}}" alt="">
+                        {{#if activeOffers.length}}
+                            {{#each activeOffers}}
+                                <div class="col-md-4">
+                                    <div class="card mb-3 text-center">
                                         <div class="card-body">
-                                            <h4 class="card-title">{{title}} Ahiram</h4>
-                                            <p class="card-text">{{place}}Maravilla</p>
-                                            <a href="/offers/{{id}}" class="btn primary-btn">See More</a>
+                                            <h4 class="card-title">{{title}}</h4>
+                                            <p class="card-text">{{place}}</p>
+                                            <p class="card-text">${{price}}</p>
+                                            <div class="row">
+                                                <div class="col-6 text-center">
+                                                    <a href="/offers/{{id}}" class="btn primary-btn">See Details</a>
+                                                </div>
+                                                <div class="col-md-6 text-center">
+                                                        <a href="../update-offer/{{id}}" class="btn btn-block primary-btn">Edit</a>
+                                                </div> 
+                                            </div>
+                                            <div class="row">
+                                                <form class="col mt-3 justify-content-center form-inline" action="/offers/delete-offer/{{id}}" method="POST">
+                                                        <input type="hidden" value="{{account_id}}" name="accountId">
+                                                        <button class="btn delete-btn" type="submit">Delete</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             {{/each}}
                         {{else}}
-                            <h3>No offers yet</h3>
+                            <div class="col mt-5 text-center">
+                                <h4>No offers yet</h4>
+                            </div>
                         {{/if}}
                     </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-done" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <div class="row">
-                        {{#if offerslength}}
-                            {{#each offer}}
-                                <div class="col-4">
-                                    <div class="card">
-                                        <img class="card-img-top" src="https://i.ytimg.com/vi/WE00soncSqw/maxresdefault.jpg" alt="">
+                        {{#if inactiveOffers.length}}
+                            {{#each inactiveOffers}}
+                                <div class="col-md-4">
+                                    <div class="card mb-3 text-center">
                                         <div class="card-body">
-                                            <h4 class="card-title">{{title}} Ahiram</h4>
-                                            <p class="card-text">{{place}}Maravilla</p>
-                                            <a href="/petitions/{{id}}" class="btn primary-btn">See More</a>
+                                            <h4 class="card-title">{{title}} </h4>
+                                            <p class="card-text">{{place}}</p>
+                                            <div class="row">
+                                                <div class="col-6 text-center">
+                                                        <a href="/offers/{{id}}" class="btn primary-btn">See Details</a>
+                                                </div>
+                                                <div class="col-6 text-center">
+                                                    <a href="/purchase/offers/{{id}}" class="btn primary-btn">See Purchase</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             {{/each}}
                         {{else}}
-                            <h3>No done offers yet</h3>
+                            <div class="col mt-5 text-center">
+                                <h4>No done offers yet</h4>
+                            </div>
                         {{/if}}
                     </div>                   
                 </div>

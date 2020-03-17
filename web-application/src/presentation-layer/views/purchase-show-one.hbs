@@ -1,26 +1,33 @@
 <div class="container-fluid">
-    <h2 class="text-center">Offer Details</h2>
+    <h2 class="text-center">Purchase Details</h2>
+    <div class="row">
+        <div class="col-12 card-deck">
+            {{#if purchase}}
+            <div class="card text-center">
+                <h4>Purchase ID: {{purchase.id}}</h5>
+                <h5 class="text-center">Address to deliver</h5>
+                <p>Street: {{purchase.street}}</p>
+                <p>City: {{purchase.city}}</p>
+                <p>Zip: {{purchase.zip}}</p>
+                <p>Country: {{purchase.country}}</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
     <div class="row py-3">
         {{#if offer}}
         <div class="col-12 card-deck">
             <div class="text-center card">
-                <h3 class="text-left ml-3">  Offer:</h3>
+                <h3 class="text-left ml-3">Offer:</h3>
                 <h4>Title: {{offer.title}}</h4>
                 <h5>Author: {{offer.author}}</h5>
                 <h5>Place: {{offer.place}}</h5>
                 <h5>State of book: {{offer.state}}</h5>
                 <p>Commentary: {{offer.commentary}}</p>
-                <h5 class="my-3" name="price" id="price">Price: ${{offer.price}}</h5>
-                {{#if petitionIsMine}}
-                    <div class="col text-center">
-                        <a class="btn" href="/purchase/{{offer.id}}/{{offer.petition_id}}">
-                            <button class="btn btn-lg btn-block primary-btn">Accept</button>
-                        </a>
-                    </div>
-                {{/if}}
+                <h5 class="my-3" name="price" id="price">Price:${{offer.price}}</h5>
             </div>
             <div class="text-center card">
-                <h3 class="text-left ml-3">Petition Associated:</h3>
+                <h3 class="text-left ml-3">Petition:</h3>
                 {{#if petition}}
                     <h4>Title: {{petition.title}}</h4>
                     <h5>Author: {{petition.author}}</h5>
@@ -30,9 +37,9 @@
                 {{/if}}
             </div>
         </div>
-        
         {{else}}
-            <p class="text-center">No offer found</p>
+            <p class="text-center">Error</p>
         {{/if}}    
     </div>
+    
 </div>

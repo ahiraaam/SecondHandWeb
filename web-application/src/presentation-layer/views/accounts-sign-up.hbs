@@ -1,25 +1,34 @@
 <div class="container">
 	<div class="row">
 		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-			<div class="card my-5">
+			<div class="card my-2">
 				<div class="card-body">
 					<h5 class="card-title text-center">Sign Up</h5>
 					<form action="sign-up" class="needs-validation" method="POST">
 						<div class="form-group">
-							<label for="inputEmail">Email address</label>
+							<label for="email">Email address</label>
 							<input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
 						</div>
 						<div class="form-group">
-							<label for="inputPassword">Username</label>							
+							<label for="username">Username</label>							
 							<input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
 						</div>
 						<div class="form-group">
-							<label for="inputPassword">Password</label>							
+							<label for="password">Password</label>							
 							<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+						</div>
+						<div class="form-group">
+							<label for="passwordRepeated">Password</label>							
+							<input type="password" id="passwordRepeated" name="passwordRepeated" class="form-control" placeholder="Confirm Password" required>
 						</div>
 						<input class="btn btn-lg primary-btn btn-block text-uppercase" type="submit" value="Sign up">
 					</form>
 				</div>
+				{{#if errors.length}}
+					{{#each errors}}
+						<p class="text-center">{{this}}</p>
+					{{/each}}
+				{{/if}}
 			</div>
 		</div>
 	</div>

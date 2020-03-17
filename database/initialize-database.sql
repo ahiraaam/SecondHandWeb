@@ -49,11 +49,16 @@ CREATE TABLE offer (
 
 CREATE TABLE purchases(
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	address VARCHAR(50) NOT NULL,
+	street VARCHAR(50) NOT NULL,
+	city VARCHAR(50) NOT NULL,
+	zip INT NOT NULL,
+	country VARCHAR(50) NOT NULL,
 	account_id INT UNSIGNED,
 	petition_id INT UNSIGNED,
 	offer_id INT UNSIGNED,
+	seller_id INT UNSIGNED,
 	FOREIGN KEY (account_id) REFERENCES accounts(id),
+	FOREIGN KEY (seller_id) REFERENCES accounts(id),
 	FOREIGN KEY (petition_id) REFERENCES petitions(id),
 	FOREIGN KEY (offer_id) REFERENCES offer(id)
 		ON DELETE CASCADE
