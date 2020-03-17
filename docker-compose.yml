@@ -31,3 +31,12 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD : theRootPassword
       POSTGRES_DB: webAppDatabase
+  nginx:
+    build: nginx
+    volumes:
+      - ./mysite.template:/etc/nginx/conf.d/mysite.template
+    ports:
+      - "8888:80"
+    environment:
+      NGINX_HOST: 192.168.99.100
+      NGINX_PORT: 80
