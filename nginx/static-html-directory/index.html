@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded",function() {
 					SeLec
 				</a>
 			<ul class="navbar-nav mr-3 ml-auto">
-				{{#if isLoggedIn}}
+				<div id="logged" style="display: none;">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
 							{{username}}
@@ -82,13 +82,15 @@ document.addEventListener("DOMContentLoaded",function() {
 							<a class="dropdown-item" href="/accounts/sign-out">Log Out</a>
 						</div>
 					</li>
-				{{else}}
+				</div>
+				<div id="not_logged">
 					<li class="nav-item">
 						<a href="/accounts/sign-in">
 							<button class="btn primary-btn">Sign In</button>
 						</a>
 					</li>
-				{{/if}}
+				</div>
+
 			</ul>
 		</nav>
 	</header>
