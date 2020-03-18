@@ -1,0 +1,68 @@
+html{
+	height: 100%;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1rem;
+}
+h1,h2,h3,h4{
+	color:  #001529;
+	font-style: normal;
+}
+body{
+	background-color: rgb(225, 225, 225);
+	height: 100%;
+}
+main{
+	padding-bottom: 60px;
+}
+body main .container-fluid{
+	padding: 8px;
+	overflow-y: auto !important;
+	overflow-x: hidden;
+}
+.overflow-auto{
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+}
+.primary-color{
+	background-color: #001529
+}
+.primary-btn{
+	background-color: #B288C0 !important;
+	color: white !important;
+}
+.primary-btn:hover{
+	background-color: #9437C9 !important;
+}
+.delete-btn{
+	background-color: rgb(238, 62, 31) !important;
+	color: white !important;
+}
+.link{
+	color: #B288C0 !important;
+}
+.link:hover{
+	color: #9437C9 !important
+}
+.card{
+	background-color: rgb(242, 240, 243) !important;
+}
+.image-card{
+	max-height: 10em;
+	object-fit: contain;
+}
+.image-show-one{
+	max-height: 20em;
+	object-fit: contain;
+}
+
+.nav > .active{
+	background-color: #9437C9 !important;
+	color: white !important;
+}
+.footer{
+	position: fixed;
+	height: 60px;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}

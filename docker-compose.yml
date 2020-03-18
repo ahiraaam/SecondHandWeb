@@ -31,3 +31,12 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD : theRootPassword
       POSTGRES_DB: webAppDatabase
+  nginx:
+    build: nginx
+    volumes:
+      - "./nginx/static-html-directory:/usr/share/nginx/html/"
+    ports:
+      - "8888:80"
+    environment:
+      NGINX_HOST: 192.168.99.100
+      NGINX_PORT: 80

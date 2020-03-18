@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>The Community</title>
+	<link rel="stylesheet" href="public/css/layout.css">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+document.addEventListener("DOMContentLoaded",function() {
+    fetch(
+		"http://192.168.99.100:8080/api/petitions"
+	).then(function(response){
+		// TODO: Check status code to see if it succeeded. Display errors if it failed.
+		return response.json()
+	}).then(function(petitions){
+		const cont = document.querySelector("#petitions")
+        cont.innerText = ""
+        
+
+		for(const petition of petitions){
+            const div = document.createElement("div")
+            div.setAttribute("class", "col-md-4");
+            div.setAttribute("class", "my-2"); 
+            const card = document.createElement("div")
+            card.setAttribute("class", "card"); 
+            card.setAttribute("style", "height 22em"); 
+            const img = document.createElement("img")
+            img.setAttribute("class", "card-img-top"); 
+            img.setAttribute("class", "image-card");
+            img.setAttribute("class", "mt-3"); 
+            img.src = petition.photo
+            const cardBody = document.createElement("div")
+            cardBody.setAttribute("class", "card-body"); 
+            const title = document.createElement("h4")
+            title.setAttribute("class", "card-title"); 
+            title.setAttribute("class", "text-center"); 
+            title.innerText = petition.title
+            const text = document.createElement("p")
+            text.setAttribute("class", "card-text"); 
+            text.setAttribute("class", "text-center"); 
+            text.innerText = petition.place
+			//anchor.setAttribute("href", '/pets/'+petition.id)
+            cardBody.appendChild(text)
+            cardBody.appendChild(title)
+            card.appendChild(img)
+            card.appendChild(cardBody)
+            div.appendChild(card)
+			cont.append(div)
+		}
+	}).catch(function(error){
+		console.log(error)
+    })
+})
+    </script>
+
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-sm primary-color navbar-dark ">
+			<!-- Brand/logo -->
+				<a class="btn primary-btn my-2 my-sm-0 my-lg-0 mr-auto" href="/petitions/create-petition">Create Petition</a>
+				<a class="navbar-brand mx-auto" href="/">
+					<img src="public/images/book.svg" alt="logo" style="width:50px;">
+					SeLec
+				</a>
+			<ul class="navbar-nav mr-3 ml-auto">
+				<div id="logged" style="display: none;">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+							{{username}}
+						</a>
+						<div class="dropdown-menu dropdown-menu-right">
+							<a class="dropdown-item" href="/petitions/user/{{accountId}}">My Petitions</a>
+							<a class="dropdown-item" href="/offers/user/{{accountId}}">My Offers</a>
+							<a class="dropdown-item" href="/accounts/{{accountId}}">My Account</a>
+							<a class="dropdown-item" href="/accounts/sign-out">Log Out</a>
+						</div>
+					</li>
+				</div>
+				<div id="not_logged">
+					<li class="nav-item">
+						<a href="/accounts/sign-in">
+							<button class="btn primary-btn">Sign In</button>
+						</a>
+					</li>
+				</div>
+
+			</ul>
+		</nav>
+	</header>
+
+	<main >
+		<div id="pets-page" class="container-fluid my-3">
+			<h1>Pets</h1>
+			<div class="row" id="petitions">
+                
+            </div>
+		</div>
+	</main>
+	<footer class="font-small primary-color text-white footer navbar-fixed-bottom"> 
+			<div class="footer-copyright text-center py-3">© 2020 Copyright:
+				Made in Jönköping University by Ahiram Cruz and Juan Carlos Pichardo
+			</div>
+	</footer>
+</body>
+</html>
