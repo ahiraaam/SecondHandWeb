@@ -17,6 +17,7 @@
 			<p>{{account.username}}</p>
 			<div class="row text-center">
 				<form class="col-md-6 text-center" action="delete-account" method="POST">
+					<input type="hidden" name="accountId" id="accountId" value="{{account.id}}">
 					<button class="btn delete-btn" type="submit">Delete Account</button>
 				</form>
 				<!--

@@ -7,7 +7,6 @@ module.exports = function({}){
 			Success value: The fetched accounts in an array.
 		*/
 		getAllAccounts : function(callback){
-			
 			const query = `SELECT * FROM accounts ORDER BY username`
 			const values = []
 			
@@ -27,10 +26,8 @@ module.exports = function({}){
 			Success value: The fetched account, or null if no account has that username.
 		*/
 		getAccountById : function(id, callback){
-			
 			const query = `SELECT * FROM accounts WHERE id = ? LIMIT 1`
 			const values = [id]
-			
 			db.query(query, values, function(error, accounts){
 				if(error){
 					callback(['databaseError'], null)
