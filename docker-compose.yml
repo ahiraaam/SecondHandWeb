@@ -34,7 +34,7 @@ services:
   nginx:
     build: nginx
     volumes:
-      - ./mysite.template:/etc/nginx/conf.d/mysite.template
+      - "./nginx/static-html-directory:/usr/share/nginx/html/"
     ports:
       - "8888:80"
     environment:

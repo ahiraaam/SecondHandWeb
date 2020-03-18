@@ -185,3 +185,22 @@ module.exports = function({accountRouterAPI,variousRouter,petitionRouter,offerRo
 
 
 app.listen(8080)
+
+
+
+
+
+
+
+
+
+<div class="col-md-4 my-2">
+                            <div class="card" style="height: 22em">
+                                <img class="card-img-top image-card mt-3" src="{{photo}}" alt="">
+                                <div class="card-body">
+                                    <h4 class="card-title text-center">{{title}}</h4>
+                                    <p class="card-text text-center">{{place}}</p>
+                                    <a href="/petitions/{{id}}" class="btn btn-block primary-btn">See More</a>
+                                </div>
+                            </div>
+                        </div> 

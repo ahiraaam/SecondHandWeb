@@ -6,7 +6,7 @@ module.exports = function({petitionManager, offerManager}){
 
 
     //Obtain all the petitions
-    router.get("/petitions", function(request,response){
+    router.get("/", function(request,response){
         
         petitionManager.getAllPetitions(function(errors,petitions){
 			if(0 < errors.length){
