@@ -103,8 +103,9 @@ module.exports = function({accountManager}){
     }),
 
     router.delete("/account/:id",function(request,response){
+        var accountId = request.params.id
         accountManager.deleteAccount(accountId, function(errors,res){
-            if(errors){
+            if(0 < errors.length){
                 response.status(500).end()
             }else{
                 response.status(201).end()

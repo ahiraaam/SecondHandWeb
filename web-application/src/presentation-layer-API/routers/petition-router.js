@@ -164,7 +164,6 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     router.get("/account/:id/petitions",function(request,response){
         const accountId =  0
         try {
-		
             const authorizationHeader = request.get('authorization')
             accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
             

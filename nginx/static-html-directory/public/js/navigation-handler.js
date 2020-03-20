@@ -6,9 +6,12 @@ document.addEventListener("DOMContentLoaded",function() {
         var jsonPayload = parseJwt(localStorage.idToken)
         var username = document.getElementById("nav-bar-username")
         var anchorMyAccount = document.getElementById("a-my-account")
+        var anchorMyPetitions = document.getElementById("a-my-petitions")
+        var anchorMyOffers = document.getElementById("a-my-offers")
         anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+        anchorMyPetitions.setAttribute("href", '/account/'+jsonPayload.id+"/petitions")
+        anchorMyOffers.setAttribute("href", '/account/'+jsonPayload.id+"/offers")
         username.innerText = jsonPayload.username
-        
 	}else{
 		logout()
     }
@@ -20,7 +23,6 @@ document.addEventListener("DOMContentLoaded",function() {
 			goToPage(url)
 		}
     })
-    
     document.querySelector("#login-page form").addEventListener("submit", function(event){
         event.preventDefault()
         const username = document.querySelector("#login-page #username").value
@@ -60,7 +62,6 @@ document.addEventListener("DOMContentLoaded",function() {
 			console.log(error)
 		})
     })
-
     document.querySelector("#create-petition-page form").addEventListener("submit", function(event){
         event.preventDefault()
         const title = document.querySelector("#create-petition-page #title").value
@@ -85,16 +86,12 @@ document.addEventListener("DOMContentLoaded",function() {
             if(response.status == 201){
                 goToPage("/")
             }else{
-                console.log("unaithorized")
-                console.log("unaithorized")
-                goToPage("/error")
-               
+                goToPage("/error") 
             }
         }).catch(function(error){
             goToPage("/error")
         })
     })
-
     document.querySelector("#signup-page form").addEventListener("submit",function(event){
         event.preventDefault()
         const email = document.querySelector("#signup-page #email").value
@@ -138,6 +135,11 @@ document.addEventListener("DOMContentLoaded",function() {
             const errorText = document.getElementById("error-text")
             errorText.innerText = "Network error"
 		})
+    })
+    document.querySelector("#delete-account").addEventListener("submit",function(event){
+        event.preventDefault()
+        var id = document.querySelector("#delete-account #accountId").value
+        deleteAccount(id)
     })
 
 })
@@ -240,15 +242,11 @@ function fetchAccount(id){
             })
 
         }else{
-            console.log(response)
-            console.log(response)
+            goToPage("/error")
         }
-       
     }).catch(function(error){
-        console.log(error)
-        console.log(error)
+        goToPage("/error")
     })
-
 }
 function changeToPage(url){
     const currentPageDiv = document.getElementsByClassName("current-page")[0]
@@ -264,16 +262,19 @@ function changeToPage(url){
         document.getElementById("signup-page").classList.add("current-page")
     }else if(new RegExp("/account/[0-9]+$").test(url)){
         document.getElementById("account-page").classList.add("current-page")
-		const id = url.split("/")[2]
+        const id = url.split("/")[2]
+        var accountId = document.querySelector("#delete-account #accountId")
+        accountId.value = id
 		fetchAccount(id)
-	}else if(url == "/create-pet"){
-		document.getElementById("create-pet-page").classList.add("current-page")
 	}else if(url == "/logout"){
         logout()
         goToPage("/")
 	}else if(url == "/create-petition"){
         document.getElementById("create-petition-page").classList.add("current-page")
-    }else if(url== "/error"){
+    }else if(new RegExp("/account/[0-9]+/petitions").test(url)){
+        document.getElementById("account-petitions-page").classList.add("current-page")
+    }
+    else if(url == "/error"){
         document.getElementById("error-page").classList.add("current-page")
     }
 	
@@ -290,6 +291,25 @@ function logout(){
     document.body.classList.add("isLoggedOut")
     document.getElementById("login-error-text").innerText = " "
     document.getElementById("error-text").innerText = ""
+}
+function deleteAccount(id){
+    fetch(
+        "http://192.168.99.100:8080/api/account/"+id,{
+            method: "DELETE",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            },
+        }
+    ).then(function(response){
+        if(response.status == 201){
+            logout()
+            goToPage("/")
+        }else{
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        goToPage("/error")
+    })
 }
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
