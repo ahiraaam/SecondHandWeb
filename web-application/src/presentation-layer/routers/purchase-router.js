@@ -3,7 +3,9 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
   // Name all the dependencies in the curly brackets. 
   
  	const router = express.Router()
-  
+    
+
+     //Enseñar datos de la compra por la peticion
     router.get("/petitions/:petitionId",function(request,response){
         const petitionId = request.params.petitionId
         const isLoggedIn= request.session.isLoggedIn
@@ -65,6 +67,8 @@ module.exports = function({purchaseManager,petitionManager,offerManager}){
         })
     })
 
+
+    //Obtener pagina de compra
 	router.get("/:offerId/:petitionId", function(request, response){
         const offerId = request.params.offerId
         const model = {

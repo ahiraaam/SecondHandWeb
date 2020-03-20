@@ -56,9 +56,9 @@ module.exports = function({petitionManager,offerManager}){
         }
     })
 
-    router.post("/create-offer/:offerId",function(request,response){
+    router.post("/create-offer/:petitionId",function(request,response){
         const {title,author,place,state,commentary,price} = request.body
-        const offerId = request.params.offerId
+        const petitionId = request.params.petitionId
         const accountId = request.session.uniqueId
         const isLoggedIn = request.session.isLoggedIn
         const offer = {
@@ -70,7 +70,7 @@ module.exports = function({petitionManager,offerManager}){
             price: price
         }
         if(isLoggedIn){
-            offerManager.createOffer(offer, accountId, offerId, function(errors,result){
+            offerManager.createOffer(offer, accountId, petitionId, function(errors,result){
                 const model={
                     isLoggedIn: isLoggedIn,
                     accountId: accountId,

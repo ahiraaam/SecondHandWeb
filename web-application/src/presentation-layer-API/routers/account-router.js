@@ -91,15 +91,11 @@ module.exports = function({accountManager}){
         const id = request.params.id
         try {
 		
-            // TODO: Extracting the payload is better put in a function
-            // (preferably a middleware function).
             const authorizationHeader = request.get('authorization')
             const accessToken = authorizationHeader.substr("Account ".length)
             
-            // TODO: Better to use jwt.verify asynchronously.
+
             const payload = jwt.verify(accessToken, serverSecret)
-            console.log(payload.id)
-            // Use payload to implement authorization...
             
             if(payload.id != id){
                 response.status(401).end()
@@ -111,16 +107,32 @@ module.exports = function({accountManager}){
         }
         
         //Get account by Id
-		accountManager.getAccountByUsername(username, function(errors, account){
-			if(0 < errors.length){
-                response.status(500).end()
-            }else if(!account){
-                response.status(404).end()
-            }else{
-                response.status(200).json(account)
+		accountManager.getAccountById(Id, function(errors, account){
+            const model = {
+                errors: errors,
+                account: account,
             }
-		})
-    })
+            if(0 < errors.length){
+                response.status(500).end()
+            }else{
+                response.status(200).json(model)
+            }
+        })
+    }),
+
+    function AccesTokenInformation(authorizationHeader){
+
+		const accessToken = authorizationHeader.substr("User".length)
+		
+		// TODO: Better to use jwt.verify asynchronously.
+		const payload = jwt.verify(accessToken, serverSecret)
+        console.log(payload.id)
+        const id = payload.id
+       
+        return id
+    }
+
+
 
 
 

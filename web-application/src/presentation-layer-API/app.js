@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 
 
 
-module.exports = function({accountRouterAPI,variousRouter,petitionRouterAPI,offerRouter}){
+module.exports = function({accountRouterAPI,petitionRouterAPI,offerRouterAPI,purchaseRouterAPI}){
 	
 	const app = express()
 
@@ -23,8 +23,10 @@ module.exports = function({accountRouterAPI,variousRouter,petitionRouterAPI,offe
 	next()
 	})
 	
-	app.use("/api/accounts", accountRouterAPI)
-	app.use("/api/petitions", petitionRouterAPI)
+	app.use("/api/", accountRouterAPI)
+	app.use("/api/", petitionRouterAPI)
+	app.use("/api/", offerRouterAPI)
+	app.use("/api/", purchaseRouterAPI)
 
 	return app
 }
