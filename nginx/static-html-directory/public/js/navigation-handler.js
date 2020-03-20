@@ -248,6 +248,21 @@ function fetchAccount(id){
         goToPage("/error")
     })
 }
+function fetchAccountPetitions(id){
+    fetch(
+        "http://192.168.99.100:8080/api/account/"+id+"/petition",{
+            method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "User "+ localStorage.accessToken
+			}
+        }
+    ).then(function(response){
+        console.log(response)
+        console.log(response)
+
+    })
+}
 function changeToPage(url){
     const currentPageDiv = document.getElementsByClassName("current-page")[0]
 	if(currentPageDiv){
@@ -273,6 +288,8 @@ function changeToPage(url){
         document.getElementById("create-petition-page").classList.add("current-page")
     }else if(new RegExp("/account/[0-9]+/petitions").test(url)){
         document.getElementById("account-petitions-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        fetchAccountPetitions(id)
     }
     else if(url == "/error"){
         document.getElementById("error-page").classList.add("current-page")
