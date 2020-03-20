@@ -74,6 +74,17 @@ module.exports = function({accountManager}){
 		})
 		
 		
+    }),
+
+    router.delete("/account/:id",function(request,response){
+        accountManager.deleteAccount(accountId, function(errors,res){
+            if(errors){
+                response.status(500).end()
+            }else{
+                response.status(201).end()
+            }
+        })
+
     })
 
     //Obtain data for the account profile page
@@ -120,6 +131,8 @@ module.exports = function({accountManager}){
        
         return id
     }
+
+    
 
 
 
