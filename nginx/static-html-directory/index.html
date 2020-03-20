@@ -11,7 +11,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	<script src="public/js/navigation-handler.js"></script>
-	<script src="public/js/index.js"></script>
 
 </head>
 <body>
@@ -31,8 +30,8 @@
 							
 						</p>
 						<div class="dropdown-menu dropdown-menu-right">
-							<a class="dropdown-item" href="/petitions/user/{{accountId}}">My Petitions</a>
-							<a class="dropdown-item" href="/offers/user/{{accountId}}">My Offers</a>
+							<a id="a-my-petitions"class="dropdown-item">My Petitions</a>
+							<a id="a-my-offers"class="dropdown-item" >My Offers</a>
 							<a id="a-my-account" class="dropdown-item">My Account</a>
 							<a class="dropdown-item" href="/logout">Log Out</a>
 						</div>
@@ -159,16 +158,112 @@
 				<h6 id="id-account"></h6>
 				<h6 id="username-account"></h6>
 				<div class="row text-center">
-					<form class="col-md-6 text-center" action="delete-account" method="POST">
-						<input type="hidden" name="accountId" id="accountId" value="{{account.id}}">
+					<form id="delete-account"class="col-md-6 text-center" action="delete-account" method="DELETE">
+						<input type="hidden" name="accountId" id="accountId" value="">
 						<button class="btn delete-btn" type="submit">Delete Account</button>
 					</form>
 				</div>	
 			</div>
 		</div>
+		<div id="account-petitions-page" class="container-fluid my-3">
+			<div class="row">
+				<div class="col-md-3">
+					<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+						<a class="nav-link active text-center" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-active" role="tab" aria-controls="v-pills-active" aria-selected="true">Active</a>
+						<a class="nav-link text-center" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-done" role="tab" aria-controls="v-pills-done" aria-selected="false">Done</a>
+					</div>
+				</div>
+			   <div class="col-md-9 overflow-auto">
+					<div class="tab-content" id="v-pills-tabContent" style="back">
+						<div class="tab-pane fade show active" id="v-pills-active" role="tabpanel" aria-labelledby="v-pills-home-tab">
+							<div class="row">
+								{{#if activePetitions.length}}
+									{{#each activePetitions}}
+											<div class="col-12 col-md-4">
+												<div class="card mb-3 text-center">
+													<img class="card-img-top mt-2 image-card" src="{{photo}}" alt="">
+													<div class="card-body">
+														<h4 class="card-title">{{title}} </h4>
+														<p class="card-text">{{place}}</p>
+														<div class="row">
+															<div class="col-md-6 btn-block-md-6 text-center">
+																<a href="/petitions/{{id}}" class="btn btn-block primary-btn">See Details</a>
+															</div>
+															<div class="col-md-6 text-center">
+																<a href="../update-petition/{{id}}" class="btn btn-block primary-btn">Edit</a>
+															</div>                                            
+														</div>
+														<div class="row mt-3">
+															<form class="col-12 justify-content-center form-inline" action="/petitions/delete-petition/{{id}}" method="POST">
+																<input type="hidden" value="{{account_id}}" name="accountId">
+																<button class="btn delete-btn" type="submit">Delete</button>
+															</form>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+									{{/each}}
+								{{else}}
+									<div class="col mt-5 text-center">
+										<h4>No petitions yet</h4>
+										<a class="mt-3 btn btn-lg primary-btn" href="/petitions/create-petition">Create Petition</a>
+									</div>
+								{{/if}}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-done" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+							<div class="row">
+								{{#if inactivePetitions.length}}
+									{{#each inactivePetitions}}
+											<div class="col-md-4">
+												<div class="card mb-3">
+													<img class="card-img-top image-card" src="{{photo}}" alt="">
+													<div class="card-body text-center">
+														<h4 class="card-title">{{title}} </h4>
+														<p class="card-text">{{place}}</p>
+														<div class="row">
+															<div class="col-md-6 btn-block-md-6 text-center">
+																<a href="/petitions/{{id}}" class="btn btn-block primary-btn">See Details</a>
+															</div>
+															<div class="col text-center">
+																<a href="/purchase/petitions/{{id}}" class="btn primary-btn">See Purchase</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+		
+									{{/each}}
+								{{else}}
+									<div class="col mt-5 text-center">
+										<h4>No petitions yet</h4>
+									</div>
+								{{/if}}
+							</div>                   
+						</div>
+					</div>
+			   </div>
+			</div>
+		</div>
+		<div id="account-offers-page" class="container-fluid my-3">
+		</div>
+		<div id="view-petition-page">
+			<h2 class="text-center">Petition</h2>
+			<div class="row py-3">
+				<div id="section-image-offer" class="col-12 col-md-6">
+
+				</div>
+				<div id="section-data-petition" class="col col-md-6 py-5">
+
+				</div>
+			</div>
+		</div>
+		<div id="view-offer-page">
+			<h2 class="text-center">Offer</h2>
+
+		</div>
 	</main>
-
-
 
 	<footer class="font-small primary-color text-white footer navbar-fixed-bottom"> 
 			<div class="footer-copyright text-center py-3">© 2020 Copyright:
