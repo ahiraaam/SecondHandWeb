@@ -47,30 +47,56 @@ module.exports = function({accountManager}){
         
     }),
 
-    //Create a new account 
-
+    //Create a new account
     router.post("/account",function(request,response){
         const email = request.body.email
 		const username = request.body.username
-		const password = request.body.password
-	
+        const password = request.body.password
+        const passwordRepeated = request.body.passwordRepeated
 		const account = {
 			email : email,
 			username : username,
-			password : password
-		}
-	
+            password : password,
+            passwordRepeated: passwordRepeated
+        }
 		accountManager.createAccount(account,function(errors, result){
-        
-            if(errors.includes("databaseError")){
-                response.status(500).end()
-            }else if(0 < errors.length){
-                response.status(400).json(errors)
+             
+            if(errors == null){
+                //response.setHeader("Location", "/")
+                //response.status(201).end()
+                accountManager.ValidateSignIn(username,password,function(errors, account){
+                    const model = {
+                        errors: errors,
+                        account: account
+                    }
+                    if(model.account == null){
+                        response.status(400).json({error: "That account doesn't exist"})
+                    }else{
+                    // TODO: Put user authorization info in the access token.
+                        const payload = {id: model.account.id}
+                        // TODO: Better to use jwt.sign asynchronously.
+                        const accessToken = jwt.sign(payload, serverSecret)
+                        // TODO: Put user info in the id token.
+                        // Try to use the standard claims:
+                        // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+                        const idToken = jwt.sign(
+                            {id: model.account.id, username: model.account.username},
+                            "lkjlkjlkjljlk"
+                        )
+                        response.status(200).json({
+                            access_token: accessToken,
+                            id_token: idToken
+                        })
+                    }
+                    
+                })
             }else{
-                response.setHeader("Location", "/")
-                response.status(201).end()
+                if(errors.includes("databaseError")){
+                    response.status(500).json({error: "An error occur while creating your account.Try it again"})
+                }
+                response.status(400).json(errors)
             }
-
+            
 		})
 		
 		
@@ -91,13 +117,10 @@ module.exports = function({accountManager}){
     router.get("/account/:id",function(request,response){
         const id = request.params.id
         try {
-		
             const authorizationHeader = request.get('authorization')
-            const accessToken = authorizationHeader.substr("Account ".length)
+            const accessToken = authorizationHeader.substr("User ".length)
             
-
             const payload = jwt.verify(accessToken, serverSecret)
-            
             if(payload.id != id){
                 response.status(401).end()
                 return
@@ -107,12 +130,14 @@ module.exports = function({accountManager}){
             return
         }
         //Get account by Id
-		accountManager.getAccountById(Id, function(errors, account){
+		accountManager.getAccountById(id, function(errors, account){
             const model = {
                 errors: errors,
                 account: account,
             }
             if(0 < errors.length){
+                console.log(errors)
+                console.log(errors)
                 response.status(500).end()
             }else{
                 response.status(200).json(model)
@@ -121,9 +146,9 @@ module.exports = function({accountManager}){
     }),
 
     function AccesTokenInformation(authorizationHeader){
-
-		const accessToken = authorizationHeader.substr("User".length)
-		
+        console.log("entraste a la matrix")
+        console.log("entraste a la matrix")
+		const accessToken = authorizationHeader.substr("User ".length)
 		// TODO: Better to use jwt.verify asynchronously.
 		const payload = jwt.verify(accessToken, serverSecret)
         console.log(payload.id)

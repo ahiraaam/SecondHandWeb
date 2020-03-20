@@ -1,7 +1,9 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 
 module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     const router = express.Router()
+    const serverSecret = "sdfkjdslkfjslkfd"
     
     //Obtain all the petitions
     router.get("/petitions", function(request,response){
@@ -33,10 +35,10 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     router.get("/petitions/:id",function(request,response){
         const accountId =  0
         try {
-		
-            const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
+            
+            //const authorizationHeader = request.get('Authorization')
+            //accountId = accountRouterAPI.AccesTokenInformation(authorizationHeader)
+            console.log(accountId)
             
         }catch(e){
             console.log("Not Logged In ")
@@ -77,13 +79,14 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     //Create a petition
     router.post("/petitions",function(request,response){
 
-        const accountId =  0
+        var accountId = ""
         try {
-		
+            //const authorizationHeader = request.get('authorization')
+           // accountId = accountRouterAPI.AccesTokenInformation(authorizationHeader)
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
@@ -105,6 +108,7 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
         }
         petitionManager.createPetition(petition, accountId, function(errors, id){
             if(errors.includes("databaseError")){
+                console.log(errors)
                 response.status(500).end()
             }else if(0 < errors.length){
                 response.status(400).json(errors)
@@ -113,20 +117,15 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
                 response.status(201).end()
             }
         })
-    
+        
     })
-
-
     //Update a petition
     router.put("/petitions/:id",function(request,response){
         
         const accountId =  0
         try {
-		
             const authorizationHeader = request.get('authorization')
             accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
         }catch(e){
             response.status(401).end()
             return
