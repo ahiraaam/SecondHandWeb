@@ -41,29 +41,38 @@ module.exports = function({petitionManager, offerManager}){
     router.get("/:id",function(request,response){
         const id = request.params.id
         const accountId = request.session.uniqueId
-        petitionManager.getPetitionById(id,function(errors,petition){
-            const model = {
-				errors: errors,
-                petition: petition,
-                petitionActive: null,
-                isLoggedIn: request.session.isLoggedIn,
-                username: request.session.username,
-                accountId: accountId,
-                offers: null,
-                isMine: false
-            }
-            if(model.petition.active == true){
-                model.petitionActive = true
-            }
-            if(accountId == model.petition.account_id){
-                model.isMine = true
-            }
-            offerManager.getOfferByPetition(id,function(errors,offers){
-                model.offers = offers
-                response.render("petition-show-one.hbs",model)
+        try{
+            petitionManager.getPetitionById(id,function(errors,petition){
+                const model = {
+                    errors: errors,
+                    petition: petition,
+                    petitionActive: null,
+                    isLoggedIn: request.session.isLoggedIn,
+                    username: request.session.username,
+                    accountId: accountId,
+                    offers: null,
+                    isMine: false
+                }
+                if(model.petition){
+                    if(model.petition.active == true){
+                        model.petitionActive = true
+                    }
+                    if(accountId == model.petition.account_id){
+                        model.isMine = true
+                    }
+                    offerManager.getOfferByPetition(id,function(errors,offers){
+                        model.offers = offers
+                        response.render("petition-show-one.hbs",model)
+                    })
+                }else{
+                    response.render("error.hbs")
+                }
+                
             })
-           
-        })
+        }catch{
+            response.render("error.hbs")
+        }
+        
     })
 
     router.get("/user/:accountId",function(request,response){

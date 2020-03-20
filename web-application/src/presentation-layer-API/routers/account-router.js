@@ -1,5 +1,5 @@
 const express = require('express')
-//const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 module.exports = function({accountManager}){
 	const router = express.Router()
@@ -23,30 +23,20 @@ module.exports = function({accountManager}){
 				errors: errors,
 				account: account
 			}
-			
-			
-			
 			if(model.account == null){
-				
-                
-                response.status(400).json({error: "invalid_grant"})
-
-
+                response.status(400).json({error: "That account doesn't exist"})
 			}else{
-
             // TODO: Put user authorization info in the access token.
                 const payload = {id: model.account.id}
                 // TODO: Better to use jwt.sign asynchronously.
                 const accessToken = jwt.sign(payload, serverSecret)
-                
                 // TODO: Put user info in the id token.
                 // Try to use the standard claims:
                 // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
                 const idToken = jwt.sign(
-                    {sub: model.account.id, username: model.account.username},
+                    {id: model.account.id, username: model.account.username},
                     "lkjlkjlkjljlk"
                 )
-                
                 response.status(200).json({
                     access_token: accessToken,
                     id_token: idToken
@@ -105,7 +95,6 @@ module.exports = function({accountManager}){
             response.status(401).end()
             return
         }
-        
         //Get account by Id
 		accountManager.getAccountById(Id, function(errors, account){
             const model = {
@@ -138,6 +127,5 @@ module.exports = function({accountManager}){
 
 
     return router
-
 }
 

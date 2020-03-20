@@ -2,9 +2,7 @@ const express = require('express')
 
 module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     const router = express.Router()
-
-
-
+    
     //Obtain all the petitions
     router.get("/petitions", function(request,response){
         petitionManager.getAllPetitions(function(errors,petitions){
@@ -105,7 +103,6 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
             commentary: commentary,
             photo: photo
         }
-	
         petitionManager.createPetition(petition, accountId, function(errors, id){
             if(errors.includes("databaseError")){
                 response.status(500).end()

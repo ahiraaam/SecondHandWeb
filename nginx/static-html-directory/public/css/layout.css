@@ -66,3 +66,21 @@ body main .container-fluid{
 	left: 0;
 	width: 100%;
 }
+
+/*SPA*/
+
+main > div{
+	display: none !important;
+}
+
+main > div.current-page{
+	display: block !important;
+}
+
+body.isLoggedOut .showIfLoggedIn{
+	display: none;
+}
+
+body.isLoggedIn .showIfLoggedOut{
+	display: none;
+}

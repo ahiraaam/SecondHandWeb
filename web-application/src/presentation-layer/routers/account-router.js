@@ -12,26 +12,30 @@ module.exports = function({accountManager}){
 		const username = request.body.username
 		const password = request.body.password
 		const passwordRepeated = request.body.passwordRepeated
-
 		const account = {
 			email : email,
 			username : username,
 			password : password,
 			passwordRepeated: passwordRepeated
 		}
-		accountManager.createAccount(account,function(errors, result){
-			const model = {
-				errors:errors
-			}
-			if(model.errors){
-				response.render("accounts-sign-up.hbs", model)
-			}else{
-				request.session.isLoggedIn = true
-				request.session.username = username
-				request.session.uniqueId = result
-				response.redirect("/")
-			}
-		})
+		try{
+			accountManager.createAccount(account,function(errors, result){
+				const model = {
+					errors:errors
+				}
+				if(model.errors){
+					response.render("accounts-sign-up.hbs", model)
+				}else{
+					request.session.isLoggedIn = true
+					request.session.username = username
+					request.session.uniqueId = result
+					response.redirect("/")
+				}
+			})
+		}catch{
+
+		}
+		
 	})
 	
 	router.get("/sign-out", function(request,response){
@@ -68,9 +72,9 @@ module.exports = function({accountManager}){
 	
 	router.get('/:accountId', function(request, response){
 		const accountId = request.params.accountId
+		const myId = request.session.uniqueId
 		const username = request.session.username
 		const isLoggedIn = request.session.isLoggedIn
-		const myId = request.session.uniqueId
 		if(isLoggedIn){
 			if(accountId == myId){
 				accountManager.getAccountById(accountId, function(errors, account){
@@ -81,7 +85,11 @@ module.exports = function({accountManager}){
 						isLoggedIn: isLoggedIn,
 						username: username
 					}
+					if(account){
 						response.render("accounts-show-one.hbs", model)
+					}else{
+						response.redirect("/")
+					}
 				})
 			}else{
 				const model = {
@@ -94,20 +102,26 @@ module.exports = function({accountManager}){
 			}
 			
 		}else{
-			const error = {error: UN_ERROR}
-			response.render("error.hbs",error)
+			const model = {error: UN_ERROR}
+			response.render("error.hbs",model)
 		}
 		
 	})
 
 	router.post("/delete-account",function(request,response){
 		const accountId = request.session.uniqueId
+		const myId = request.body.accountId
 		const isLoggedIn = request.session.isLoggedIn
 		if(isLoggedIn){
-			accountManager.deleteAccount(accountId, function(errors,res){
-				request.session.destroy()
-				response.redirect("/")
-			})
+			if(accountId == myId){
+				accountManager.deleteAccount(accountId, function(errors,res){
+					request.session.destroy()
+					response.redirect("/")
+				})
+			}else{
+				const model = {error:UN_ERROR}
+				response.render("error.hbs",model)
+			}
 		}else{
 			response.render("error.hbs")
 		}
