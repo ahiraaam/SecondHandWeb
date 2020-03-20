@@ -262,6 +262,8 @@ function changeToPage(url){
 		document.getElementById("login-page").classList.add("current-page")
     }else if(url == "/signup"){
         document.getElementById("signup-page").classList.add("current-page")
+    }else if(url == "/signupGoogle"){
+        googleLog()
     }else if(new RegExp("/account/[0-9]+$").test(url)){
         document.getElementById("account-page").classList.add("current-page")
 		const id = url.split("/")[2]
@@ -298,4 +300,9 @@ function parseJwt (token) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     return JSON.parse(jsonPayload);
-};
+}
+
+function googleLog(){
+    window.location = "https://accounts.google.com/o/oauth2/v2/auth?client_id=812092900216-18qomh890locgbr24kf9t0ron8mb3unh.apps.googleusercontent.com&redirect_uri=http://finbok.com&response_type=code&scope=openid";
+}
+;
