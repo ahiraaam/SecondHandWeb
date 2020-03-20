@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded",function() {
         login(localStorage.accessToken,localStorage.idToken)
         var jsonPayload = parseJwt(localStorage.idToken)
         var username = document.getElementById("nav-bar-username")
+        var anchorMyAccount = document.getElementById("a-my-account")
+        anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
         username.innerText = jsonPayload.username
         
 	}else{
@@ -25,10 +27,11 @@ document.addEventListener("DOMContentLoaded",function() {
         const password = document.querySelector("#login-page #password").value
         document.querySelector("#login-page form").reset()
         fetch(
-			"http://192.168.99.100:8080/api/accounts/tokens", {
+			"http://192.168.99.100:8080/api/tokens", {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
+                    
 				}, 
 				body: "grant_type=password&username="+username+"&password="+password
 			}
@@ -40,17 +43,16 @@ document.addEventListener("DOMContentLoaded",function() {
                         login(body.access_token,body.id_token)
                         var jsonPayload = parseJwt(body.id_token)
                         var username = document.getElementById("nav-bar-username")
+                        var anchorMyAccount = document.getElementById("a-my-account")
+                        anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
                         username.innerText = jsonPayload.username
                         goToPage("/")
                         console.log(body)
                 })
                 }else{
                     return response.json().then(function(error){
-                        const card = document.getElementById("card-login")
-                        const text = document.createElement("p")
-                        text.setAttribute("class", "card-text text-center");
+                        const text = document.getElementById("login-error-text")
                         text.innerText = error.error
-                        card.appendChild(text)
                     })
                 }
 				
@@ -69,12 +71,13 @@ document.addEventListener("DOMContentLoaded",function() {
         const photo = document.querySelector("#create-petition-page #photo").value
         const petition = {title,author,place,state,commentary,photo}
         document.getElementById("create-petition-form").reset()
+
         fetch(
 			"http://192.168.99.100:8080/api/petitions", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": "Bearer "+ localStorage.accessToken
+					"Authorization": "User "+ localStorage.accessToken
 				},
 				body: JSON.stringify(petition)
 			}
@@ -82,13 +85,60 @@ document.addEventListener("DOMContentLoaded",function() {
             if(response.status == 201){
                 goToPage("/")
             }else{
+                console.log("unaithorized")
+                console.log("unaithorized")
                 goToPage("/error")
+               
             }
         }).catch(function(error){
             goToPage("/error")
         })
     })
 
+    document.querySelector("#signup-page form").addEventListener("submit",function(event){
+        event.preventDefault()
+        const email = document.querySelector("#signup-page #email").value
+        const username = document.querySelector("#signup-page #username").value
+        const password = document.querySelector("#signup-page #password").value
+        const passwordRepeated = document.querySelector("#signup-page #passwordRepeated").value
+
+        const account = {email,username,password,passwordRepeated}
+
+        document.querySelector("#signup-page form").reset()
+        fetch(
+			"http://192.168.99.100:8080/api/account", {
+				method: "POST",
+				headers: {
+                    "Content-Type": "application/json"
+				}, 
+				body: JSON.stringify(account)
+			}
+		).then(function(response){
+            if(response.status == 200){
+                console.log("ok")
+                return response.json().then(function(body){
+                    // TODO: Read out information about the user account from the id_token.
+                    login(body.access_token,body.id_token)
+                    var jsonPayload = parseJwt(body.id_token)
+                    var username = document.getElementById("nav-bar-username")
+                    var anchorMyAccount = document.getElementById("a-my-account")
+                    anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+                    username.innerText = jsonPayload.username
+                    goToPage("/")
+                    console.log(body)
+                })
+            }else{
+                return response.json().then(function(error){
+                    const errorText = document.getElementById("error-text")
+                    errorText.innerText = error
+                })
+            }
+				
+		}).catch(function(error){
+            const errorText = document.getElementById("error-text")
+            errorText.innerText = "Network error"
+		})
+    })
 
 })
 
@@ -170,6 +220,36 @@ function fetchAllPetitions(){
         cont.append(text)			
     })
 }
+function fetchAccount(id){
+    fetch(
+        "http://192.168.99.100:8080/api/account/"+id,{
+            method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "User "+ localStorage.accessToken
+			}
+        }
+    ).then(function(response){
+        if(response.status == 200){
+            return response.json().then(function(model){
+                var card = document.getElementById("card-account-page")
+                var id = document.querySelector("#card-account-page #id-account")
+                var username = document.querySelector("#card-account-page #username-account")
+                id.innerText = "Id: " + model.account.id
+                username.innerText = "Username: " + model.account.username
+            })
+
+        }else{
+            console.log(response)
+            console.log(response)
+        }
+       
+    }).catch(function(error){
+        console.log(error)
+        console.log(error)
+    })
+
+}
 function changeToPage(url){
     const currentPageDiv = document.getElementsByClassName("current-page")[0]
 	if(currentPageDiv){
@@ -180,10 +260,12 @@ function changeToPage(url){
         fetchAllPetitions()
     }else if(url == "/login"){
 		document.getElementById("login-page").classList.add("current-page")
-	}else if(new RegExp("^/pets/[0-9]+$").test(url)){
-		document.getElementById("pet-page").classList.add("current-page")
+    }else if(url == "/signup"){
+        document.getElementById("signup-page").classList.add("current-page")
+    }else if(new RegExp("/account/[0-9]+$").test(url)){
+        document.getElementById("account-page").classList.add("current-page")
 		const id = url.split("/")[2]
-		fetchPet(id)
+		fetchAccount(id)
 	}else if(url == "/create-pet"){
 		document.getElementById("create-pet-page").classList.add("current-page")
 	}else if(url == "/logout"){
@@ -196,21 +278,19 @@ function changeToPage(url){
     }
 	
 }
-
-
 function login(accessToken, idToken){
-    localStorage.setItem("accessToken",accessToken)
-    localStorage.setItem("idToken",idToken)
+    localStorage.accessToken = accessToken
+    localStorage.idToken = idToken
 	document.body.classList.remove("isLoggedOut")
     document.body.classList.add("isLoggedIn")
 }
-
 function logout(){
     localStorage.clear()
 	document.body.classList.remove("isLoggedIn")
-	document.body.classList.add("isLoggedOut")
+    document.body.classList.add("isLoggedOut")
+    document.getElementById("login-error-text").innerText = " "
+    document.getElementById("error-text").innerText = ""
 }
-
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
