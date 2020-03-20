@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded",function() {
-
-        
-
     var showChangePassword = document.getElementById('change_password')
     showChangePassword.addEventListener("click", function () {
         var element = document.getElementById("form_change_password")  

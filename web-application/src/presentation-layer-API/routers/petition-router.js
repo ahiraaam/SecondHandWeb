@@ -2,12 +2,9 @@ const express = require('express')
 
 module.exports = function({petitionManager, offerManager}){
     const router = express.Router()
-
-
-
+    
     //Obtain all the petitions
     router.get("/", function(request,response){
-        
         petitionManager.getAllPetitions(function(errors,petitions){
 			if(0 < errors.length){
                 response.status(500).end()
@@ -21,11 +18,7 @@ module.exports = function({petitionManager, offerManager}){
     //Obtain information of one petition and its offers
     router.post("/:id",function(request,response){
         const id = request.params.id
-        
-        
 
-
-        
         petitionManager.getPetitionById(id, function(errors, petition){
             if(0 < errors.length){
                 response.status(500).end()
@@ -50,7 +43,6 @@ module.exports = function({petitionManager, offerManager}){
 
     //Create a petition
     router.post("/",function(request,response){
-
         const title = request.body.title
         const author = request.body.author
         const place = request.body.place
@@ -66,7 +58,6 @@ module.exports = function({petitionManager, offerManager}){
             commentary: commentary,
             photo: photo
         }
-	
         petitionManager.createPetition(petition, accountId, function(errors, id){
             if(errors.includes("databaseError")){
                 response.status(500).end()
