@@ -231,6 +231,12 @@ document.addEventListener("DOMContentLoaded",function() {
         editPetitionPut(id)
         goToPage("/")
     })
+    document.querySelector("#edit-offer-page form").addEventListener("submit",function(event){
+        event.preventDefault()
+        var id = document.querySelector("#edit-offer-page #edit-offerId").value
+        editOfferPut(id)
+        goToPage("/")
+    })
     
 })
 document.addEventListener("submit",function(e){
@@ -239,12 +245,16 @@ document.addEventListener("submit",function(e){
         var id = document.querySelector("#account-petitions-page #idPetition").value
         deletePetition(id)
     }
+    if(e.target && e.target.id=="form-delete-offer"){
+        e.preventDefault()
+        var id = document.querySelector("#account-offers-page #idOffer").value
+        deleteOffer(id)
+    }
 })
 window.addEventListener("popstate", function(event){
 	const url = location.pathname
 	changeToPage(url)
 })
-
 function goToPage(url){
 	changeToPage(url)
 	history.pushState({}, "", url)
@@ -349,8 +359,6 @@ function fetchAccount(id){
         goToPage("/error")
     })
 }
-
-
 function fetchPetition(id){
     fetch(
         "http://192.168.99.100:8080/api/petitions/"+id,{
@@ -487,8 +495,6 @@ function fetchOffer(id){
         goToPage("/error")
     })
 }
-
-
 function fetchAccountPetitions(id){
     fetch(
         "http://192.168.99.100:8080/api/account/"+id+"/petitions",{
@@ -599,7 +605,7 @@ function fetchAccountPetitions(id){
                         const purchase = document.createElement("a")
                         purchase.innerText = "See Purchase"
                         purchase.setAttribute("class", "btn btn-block primary-btn")
-                        purchase.setAttribute("href", "/purchase/"+inactivePetition.id)
+                        purchase.setAttribute("href", "/purchase/petition/"+inactivePetition.id)
 
                         row.append(card)
                         card.appendChild(img)
@@ -672,15 +678,15 @@ function fetchAccountOffers(id){
                         const rowDelete = document.createElement("div")
                         rowDelete.setAttribute("class", "row mt-3")
                         const form = document.createElement("form")
-                        form.setAttribute("id" ,"form-delete-petition")
+                        form.setAttribute("id" ,"form-delete-offer")
                         form.setAttribute("type","DELETE")
-                        const idPetition = document.createElement("input")
-                        idPetition.setAttribute("type", "hidden")
-                        idPetition.setAttribute("id", "idPetition")
-                        idPetition.setAttribute("value", activeOffer.id)
+                        const idOffer = document.createElement("input")
+                        idOffer.setAttribute("type", "hidden")
+                        idOffer.setAttribute("id", "idOffer")
+                        idOffer.setAttribute("value", activeOffer.id)
                         const buttonDelete = document.createElement("button")
                         buttonDelete.setAttribute("type", "submit")
-                        buttonDelete.setAttribute("id" , "buttonDeletePetition")
+                        buttonDelete.setAttribute("id" , "buttonDeleteOffer")
                         buttonDelete.setAttribute("class","btn delete-btn")
                         buttonDelete.innerText = "Delete"
 
@@ -694,7 +700,7 @@ function fetchAccountOffers(id){
                         divEdit.appendChild(edit)
                         card.append(form)
                         form.appendChild(buttonDelete)
-                        form.appendChild(idPetition)
+                        form.appendChild(idOffer)
                         //card.append(rowDelete)
                         //rowDelete.appendChild(divDelete)
                         //divDelete.appendChild(aDelete)
@@ -736,7 +742,7 @@ function fetchAccountOffers(id){
                         const purchase = document.createElement("a")
                         purchase.innerText = "See Purchase"
                         purchase.setAttribute("class", "btn btn-block primary-btn")
-                        purchase.setAttribute("href", "/purchase/"+inactiveOffer.id)
+                        purchase.setAttribute("href", "/purchase/offer/"+inactiveOffer.id)
 
                         row.append(card)
                         card.appendChild(title)
@@ -765,9 +771,94 @@ function fetchAccountOffers(id){
         goToPage("/error")
     })
 }
+function fetchPurchaseByPetition(id){
+    fetch(
+        "http://192.168.99.100:8080/api/purchase/petition/"+id,{
+            method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "User "+ localStorage.accessToken
+			}
+        }
+    ).then(function(response){
+        if(response.status == 200){
+            return response.json().then(function(model){
+                console.log(model)
+                var street = document.querySelector("#purchase-street")
+                street.innerText = "Street: "+model.purchase.title
+                var city = document.querySelector("#purchase-city")
+                city.innerText = "City: "+ model.purchase.city
+                var zip = document.querySelector("#purchase-zip")
+                zip.innerText = "Zip Code: "+model.purchase.zip
+                var country = document.querySelector("#purchase-country")
+                country.innerText = "Country: "+ model.purchase.city
 
+                var offerTitle = document.querySelector("#view-purchase-page #purchase-offer-title")
+                offerTitle.innerText = "Title: "+ model.offer.title
+                var offerAuthor = document.querySelector("#view-purchase-page #purchase-offer-author")
+                offerAuthor.innerText = "Author: "+ model.offer.author
+                var offerPrice = document.querySelector("#view-purchase-page #purchase-offer-price")
+                offerPrice.innerText = "Price: $"+ model.offer.author
 
+                var petitionTitle = document.querySelector("#view-purchase-page #purchase-petition-title")
+                petitionTitle.innerText = "Title: "+model.petition.title
+                var petitionAuthor = document.querySelector("#view-purchase-page #purchase-petition-author")
+                petitionAuthor.innerText = "Title: "+model.petition.author
+                var petitionImage = document.querySelector("#view-purchase-page #purchase-petition-image")
+                petitionImage.setAttribute("src", model.petition.photo)
+            })
+        }else{
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
+    })
+}
+function fetchPurchaseByOffer(id){
+    fetch(
+        "http://192.168.99.100:8080/api/purchase/offer/"+id,{
+            method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "User "+ localStorage.accessToken
+			}
+        }
+    ).then(function(response){
+        if(response.status == 200){
+            return response.json().then(function(model){
+                console.log(model)
+                var street = document.querySelector("#purchase-street")
+                street.innerText = "Street: "+model.purchase.title
+                var city = document.querySelector("#purchase-city")
+                city.innerText = "City: "+ model.purchase.city
+                var zip = document.querySelector("#purchase-zip")
+                zip.innerText = "Zip Code: "+model.purchase.zip
+                var country = document.querySelector("#purchase-country")
+                country.innerText = "Country: "+ model.purchase.city
 
+                var offerTitle = document.querySelector("#view-purchase-page #purchase-offer-title")
+                offerTitle.innerText = "Title: "+ model.offer.title
+                var offerAuthor = document.querySelector("#view-purchase-page #purchase-offer-author")
+                offerAuthor.innerText = "Author: "+ model.offer.author
+                var offerPrice = document.querySelector("#view-purchase-page #purchase-offer-price")
+                offerPrice.innerText = "Price: $"+ model.offer.author
+
+                var petitionTitle = document.querySelector("#view-purchase-page #purchase-petition-title")
+                petitionTitle.innerText = "Title: "+model.petition.title
+                var petitionAuthor = document.querySelector("#view-purchase-page #purchase-petition-author")
+                petitionAuthor.innerText = "Title: "+model.petition.author
+                var petitionImage = document.querySelector("#view-purchase-page #purchase-petition-image")
+                petitionImage.setAttribute("src", model.petition.photo)
+            })
+        }else{
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
+    })
+}
 function changeToPage(url){
     const currentPageDiv = document.getElementsByClassName("current-page")[0]
 	if(currentPageDiv){
@@ -797,7 +888,21 @@ function changeToPage(url){
         document.getElementById("create-offer-page").classList.add("current-page")
     }else if(url == "/purchase"){
         document.getElementById("create-purchase-page").classList.add("current-page")
-    }else if(new RegExp("/petitions/[0-9]+$").test(url)){
+    }else if(new RegExp("/purchase/petition/[0-9]+$").test(url)){
+        document.getElementById("view-purchase-page").classList.add("current-page")
+        const id = url.split("/")[3]
+        console.log(id)
+        fetchPurchaseByPetition(id)
+	}else if(new RegExp("/purchase/offer/[0-9]+$").test(url)){
+        document.getElementById("view-purchase-page").classList.add("current-page")
+        const id = url.split("/")[3]
+        console.log(id)
+        fetchPurchaseByOffer(id)
+	}else if(new RegExp("/purchase/offer/[0-9]+$").test(url)){
+        document.getElementById("view-purchase-page").classList.add("current-page")
+        const id = url.split("/")[3]
+		console.log(id)
+	}else if(new RegExp("/petitions/[0-9]+$").test(url)){
         document.getElementById("view-petition-page").classList.add("current-page")
         const id = url.split("/")[2]
 		fetchPetition(id)
@@ -821,7 +926,7 @@ function changeToPage(url){
         document.getElementById("edit-offer-page").classList.add("current-page")
         const id = url.split("/")[2]
         console.log("Edit OFFER" + id)
-        //editPetition(id)
+        editOffer(id)
     }else if(url == "/error"){
         document.getElementById("error-page").classList.add("current-page")
     }
@@ -939,7 +1044,7 @@ function editPetitionPut(id){
             body: JSON.stringify(petition)
         }
     ).then(function(response){
-        if(response.status == 201){
+        if(response.status == 200){
             goToPage("/")
         }else{
             goToPage("/error")
@@ -951,10 +1056,93 @@ function editPetitionPut(id){
         goToPage("/error")
     })
 }
+function editOffer(id){
+    fetch(
+        "http://192.168.99.100:8080/api/offer/"+id,{
+            method: "GET",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status==200){
+            var title = document.querySelector("#edit-offer-page #title")
+            var author = document.querySelector("#edit-offer-page #author")
+            var place = document.querySelector("#edit-offer-page #place")
+            var state = document.querySelector("#edit-offer-page #state")
+            var commentary = document.querySelector("#edit-offer-page #commentary")
+            var price = document.querySelector("#edit-offer-page #price")
+            var editOfferId = document.querySelector("#edit-offer-page #edit-offerId")
+            editOfferId.value = id
+            return response.json().then(function(result){
+                title.value = result.offer.title
+                author.value = result.offer.author
+                place.value = result.offer.place
+                state.value = result.offer.state
+                commentary.value = result.offer.commentary
+                price.value = result.offer.price
+            })
+        }else{
+            console.log("noooo")
+        }
+    }).catch(function(error){
+        console.log(error)
+    })
+}
+function editOfferPut(id){
+    const title = document.querySelector("#form-update-offer #title").value
+    const author = document.querySelector("#form-update-offer #author").value
+    const place = document.querySelector("#form-update-offer #place").value
+    const state = document.querySelector("#form-update-offer #state").value
+    const commentary = document.querySelector("#form-update-offer #commentary").value
+    const price = document.querySelector("#form-update-offer #price").value
+    const offer = {title,author,place,state,commentary,price}
+    document.getElementById("form-update-offer").reset()
+    fetch(
+        "http://192.168.99.100:8080/api/offer/"+id,{
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "User "+ localStorage.accessToken
+            },
+            body: JSON.stringify(offer)
+        }
+    ).then(function(response){
+        if(response.status == 200){
+            goToPage("/")
+        }else{
+            goToPage("/error")
+            console.log(response)
+        }
+    }).catch(function(error){
+        console.log(error)
+
+        goToPage("/error")
+    })
+}
+function deleteOffer(id){
+    fetch(
+        "http://192.168.99.100:8080/api/offer/"+id,{
+            method: "DELETE",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status == 204){
+            goToPage("/")
+        }else{
+            console.log(response)
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
+    })
+}
 function googleLog(){
     window.location = "https://accounts.google.com/o/oauth2/v2/auth?client_id=812092900216-18qomh890locgbr24kf9t0ron8mb3unh.apps.googleusercontent.com&redirect_uri=http://finbok.com&response_type=code&scope=openid";
 }
-
 function changeActivePetitions(){
     var active = document.getElementById('v-pills-active-tab')
     var done = document.getElementById('v-pills-done-tab')
@@ -984,7 +1172,6 @@ function changeActivePetitions(){
         }
     })
 }
-
 function changeActiveOffers(){
     var activeOffer = document.getElementById("v-pills-active-tab-offers")
     var doneOffer = document.getElementById("v-pills-done-tab-offers")

@@ -97,26 +97,25 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
 
     //Update an offer
     router.put("/offer/:id",function(request,response){
-        const accountId =  0
+        var accountId = ""
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
         }
 
         const offerId = request.params.id
-        const accountId = request.body.id
         const title = request.body.title
         const author = request.body.author
         const place = request.body.place
         const state = request.body.state
         const commentary = request.body.commentary
         const price = request.body.price
+
         const offer = {
             title: title,
             author: author,
@@ -128,17 +127,17 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
         offerManager.updateOffer(offer, offerId,function(errors,offer){
             if(0 < errors.length){
                 response.status(500).end()
+                console.log("Error 1")
             }else{
                 offerManager.getOfferById(offerId,function(errors,result){
                     
                     if(0 < errors.length){
                         response.status(500).end()
+                        console.log("Error 2")
                     }else{
                         const model = {
                             errors: errors,
                             offer: offer,
-                            isLoggedIn: request.session.isLoggedIn,
-                            username: request.session.username,
                             accountId: accountId,
                             isMine: true
                         }
@@ -147,7 +146,6 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
                     
                     
                 })
-                //TODO ERRORRR
                 
             } 
             
@@ -199,35 +197,27 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
     
 
 
-    //Delete Offer]
-    router.get("/offer/:id",function(request,response){
+    //Delete Offer
+    router.delete("/offer/:id",function(request,response){
         const offerId = request.params.id
-        const accountId =  0
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            var accountIdPayload = payload.id
             
         }catch(e){
             response.status(401).end()
             return
         }
-        
-        const offerId = request.params.id
         //todo handle errors
-        if(accountId == request.session.uniqueId){
-            offerManager.deleteOffer(offerId,function(errors,response){
+            offerManager.deleteOffer(offerId,function(errors,res){
                 if(0 < errors.length){
                     response.status(500).end()
                 }else{
                     response.status(204).end()
                 }
             })
-
-        }else{
-            response.status(500).end()
-        } 
     })
     
     

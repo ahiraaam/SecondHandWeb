@@ -7,22 +7,23 @@ module.exports = function({purchaseManager,accountManager,offerManager,petitionM
     
     //Get purchase through petition
     router.get("/purchase/petition/:id",function(request,response){
-        const accountId =  0
+        var accountId = ""
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
         }
-        const petitionId = request.params.petitionId
+        const petitionId = request.params.id
         var petition = null
         var offer = null
         var purchase = null
         purchaseManager.getPurchasesByPetition(petitionId,function(errors,result){
+            console.log(result)
+            console.log(result)
             if(0 < errors.length){
                 response.status(500).end()
             }else{
@@ -39,62 +40,57 @@ module.exports = function({purchaseManager,accountManager,offerManager,petitionM
                         }else{
                             petition = result
                             const model = {
-                                username:username,
                                 accountId:accountId,
                                 petition:petition,
                                 offer:offer,
                                 purchase:purchase
                             }
-                            console.log(model.purchase)
-                            console.log(model.purchase)
+
                             response.status(200).json(model)
                         }
                        
                     })
                     }
-                    
                 })
             }
             
         })
     }),
-
+    
 
     //Get purchase through offer
     router.get("/purchase/offer/:id",function(request,response){
-        const accountId =  0
+        var accountId = ""
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
         }
 
-        const offerId = request.params.offerId
+        const offerId = request.params.id
         var petition = null
         var offer = null
         var purchase = null
-        purchaseManager.getPurchasesByOffer(offerId,function(error,result){
+        purchaseManager.getPurchasesByOffer(offerId,function(errors,result){
             if(0 < errors.length){
                 response.status(500).end()
             }else{
                 purchase = result
-            offerManager.getOfferById(purchase.offer_id,function(error,result){
+            offerManager.getOfferById(purchase.offer_id,function(errors,result){
                 if(0 < errors.length){
                     response.status(500).end()
                 }else{
                     offer = result
-                    petitionManager.getPetitionById(purchase.petition_id,function(error,result){
+                    petitionManager.getPetitionById(purchase.petition_id,function(errors,result){
                         if(0 < errors.length){
                             response.status(500).end()
                         }else{
                             petition = result
                             const model = {
-                                username:username,
                                 accountId:accountId,
                                 petition:petition,
                                 offer:offer,
@@ -104,8 +100,7 @@ module.exports = function({purchaseManager,accountManager,offerManager,petitionM
                             console.log(model.purchase)
                             response.status(200).json(model)
                         }
-                        
-                         
+
                     })
                 }
                 
