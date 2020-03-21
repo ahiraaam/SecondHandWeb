@@ -11,6 +11,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	<script src="public/js/navigation-handler.js"></script>
+	<script src="public/js/index.js"></script>
 
 </head>
 <body>
@@ -346,6 +347,50 @@
 			<h2 class="text-center">Offer</h2>
 
 		</div>
+		<div id="edit-petition-page" class="container col-sm-9 col-md-7 col-lg-8">
+			<h2 class="text-center">Update Petition</h2>
+			<form id="form-update-petition" action="" method="PUT">
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="titleEdit">Title</label>
+						<input type="text" id="titleEdit" name="title" class="form-control"  required autofocus>
+					</div>
+					<div class="form-group col-md-6">
+						<label for="authorEdit">Author</label>
+						<input type="text" id="authorEdit" name="author" class="form-control" required>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="placeEdit">Place</label>
+						<input type="text" id="placeEdit" name="place" class="form-control" required>
+					</div>
+					<div class="form-group col-md-6">
+						<label for="stateEdit">State of the book</label>
+						<select class="form-control" name="stateEdit" id="stateEdit" aria-selected="{{petition.state}}" required>
+							<option value="new">New</option>
+							<option value="used">Used</option>
+							<option value="any">Any</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="commentaryEdit">Commentary</label>
+					<input type="text" id="commentaryEdit" name="commentary" class="form-control" >
+				</div>
+				<div class="form-group">
+					<label for="photoEdit">URL Image</label>
+					<input type="text" name="photoEdit" id="photoEdit" class="form-control" placeholder="URL Image" >
+				</div>
+				<div class="form-group text-center">
+					<input type="hidden" id="editPetitionId">
+					<input class="btn btn-lg primary-btn text-uppercase" type="submit" value="Update Petition">
+				</div>
+			</form>
+		</div>
+
+		
 	</main>
 
 	<footer class="font-small primary-color text-white footer navbar-fixed-bottom"> 

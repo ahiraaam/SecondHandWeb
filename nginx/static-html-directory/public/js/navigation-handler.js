@@ -1,5 +1,7 @@
 
 document.addEventListener("DOMContentLoaded",function() {
+    changeActivePetitions()
+    changeActiveOffers()
     changeToPage(location.pathname)
     if(localStorage.accessToken){
         login(localStorage.accessToken,localStorage.idToken)
@@ -16,12 +18,12 @@ document.addEventListener("DOMContentLoaded",function() {
 		logout()
     }
     document.body.addEventListener("click", function(event){
-		if(event.target.tagName == "A"){
-			event.preventDefault()
-            const url = event.target.getAttribute("href")
-            console.log(url)
-			goToPage(url)
-		}
+        if(event.target.tagName == "A"){
+                event.preventDefault()
+                const url = event.target.getAttribute("href")
+                console.log(url)
+                goToPage(url)
+        }
     })
     document.querySelector("#login-page form").addEventListener("submit", function(event){
         event.preventDefault()
@@ -46,6 +48,12 @@ document.addEventListener("DOMContentLoaded",function() {
                         var jsonPayload = parseJwt(body.id_token)
                         var username = document.getElementById("nav-bar-username")
                         var anchorMyAccount = document.getElementById("a-my-account")
+                        var anchorMyAccount = document.getElementById("a-my-account")
+                        var anchorMyPetitions = document.getElementById("a-my-petitions")
+                        var anchorMyOffers = document.getElementById("a-my-offers")
+                        anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+                        anchorMyPetitions.setAttribute("href", '/account/'+jsonPayload.id+"/petitions")
+                        anchorMyOffers.setAttribute("href", '/account/'+jsonPayload.id+"/offers")
                         anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
                         username.innerText = jsonPayload.username
                         goToPage("/")
@@ -190,6 +198,11 @@ document.addEventListener("DOMContentLoaded",function() {
                     var jsonPayload = parseJwt(body.id_token)
                     var username = document.getElementById("nav-bar-username")
                     var anchorMyAccount = document.getElementById("a-my-account")
+                    var anchorMyPetitions = document.getElementById("a-my-petitions")
+                    var anchorMyOffers = document.getElementById("a-my-offers")
+                    anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+                    anchorMyPetitions.setAttribute("href", '/account/'+jsonPayload.id+"/petitions")
+                    anchorMyOffers.setAttribute("href", '/account/'+jsonPayload.id+"/offers")
                     anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
                     username.innerText = jsonPayload.username
                     goToPage("/")
@@ -212,9 +225,21 @@ document.addEventListener("DOMContentLoaded",function() {
         var id = document.querySelector("#delete-account #accountId").value
         deleteAccount(id)
     })
-
+    document.querySelector("#edit-petition-page form").addEventListener("submit",function(event){
+        event.preventDefault()
+        var id = document.querySelector("#edit-petition-page #editPetitionId").value
+        editPetitionPut(id)
+        goToPage("/")
+    })
+    
 })
-
+document.addEventListener("submit",function(e){
+    if(e.target && e.target.id=="form-delete-petition"){
+        e.preventDefault()
+        var id = document.querySelector("#account-petitions-page #idPetition").value
+        deletePetition(id)
+    }
+})
 window.addEventListener("popstate", function(event){
 	const url = location.pathname
 	changeToPage(url)
@@ -503,8 +528,22 @@ function changeToPage(url){
 		fetchOffer(id)
 	}else if(new RegExp("/account/[0-9]+/petitions").test(url)){
         document.getElementById("account-petitions-page").classList.add("current-page")
-    }
-    else if(url == "/error"){
+        const id = url.split("/")[2]
+        fetchAccountPetitions(id)
+    }else if(new RegExp("/account/[0-9]+/offers").test(url)){
+        document.getElementById("account-offers-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        fetchAccountOffers(id)
+    }else if(new RegExp("/edit-petition/[0-9]+$").test(url)){
+        document.getElementById("edit-petition-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        editPetition(id)
+    }else if(new RegExp("/edit-offer/[0-9]+$").test(url)){
+        document.getElementById("edit-offer-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        console.log("Edit OFFER" + id)
+        //editPetition(id)
+    }else if(url == "/error"){
         document.getElementById("error-page").classList.add("current-page")
     }
 	
@@ -514,6 +553,7 @@ function login(accessToken, idToken){
     localStorage.idToken = idToken
 	document.body.classList.remove("isLoggedOut")
     document.body.classList.add("isLoggedIn")
+    
 }
 function logout(){
     localStorage.clear()
@@ -549,8 +589,150 @@ function parseJwt (token) {
     }).join(''));
     return JSON.parse(jsonPayload);
 }
+function deletePetition(id){
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "DELETE",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status == 201){
+            console.log("SE ELIMINOOO")
+            goToPage("/")
+        }else{
+            console.log("ERROROOR")
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
+    })
+}
+function editPetition(id){
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "GET",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status==200){
+            var title = document.querySelector("#edit-petition-page #titleEdit")
+            var author = document.querySelector("#edit-petition-page #authorEdit")
+            var place = document.querySelector("#edit-petition-page #placeEdit")
+            var state = document.querySelector("#edit-petition-page #stateEdit")
+            var commentary = document.querySelector("#edit-petition-page #commentaryEdit")
+            var photo = document.querySelector("#edit-petition-page #photoEdit")
+            var editPetitionId = document.querySelector("#editPetitionId")
+            editPetitionId.value = id
+            return response.json().then(function(result){
+                title.value = result.petition.title
+                author.value = result.petition.author
+                place.value = result.petition.place
+                state.value = result.petition.state
+                commentary.value = result.petition.commentary
+                photo.value = result.petition.photo
+            })
+        }else{
+            console.log("noooo")
+        }
+    })
+}
+function editPetitionPut(id){
+        const title = document.querySelector("#form-update-petition #titleEdit").value
+        const author = document.querySelector("#form-update-petition #authorEdit").value
+        const place = document.querySelector("#form-update-petition #placeEdit").value
+        const state = document.querySelector("#form-update-petition #stateEdit").value
+        const commentary = document.querySelector("#form-update-petition #commentaryEdit").value
+        const photo = document.querySelector("#form-update-petition #photoEdit").value
+        const petition = {title,author,place,state,commentary,photo}
+        document.getElementById("form-update-petition").reset()
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "PUT",
+			headers: {
+                "Content-Type": "application/json",
+                "Authorization": "User "+ localStorage.accessToken
+            },
+            body: JSON.stringify(petition)
+        }
+    ).then(function(response){
+        if(response.status == 201){
+            goToPage("/")
+        }else{
+            goToPage("/error")
+            console.log(response)
+        }
+    }).catch(function(error){
+        console.log(error)
 
+        goToPage("/error")
+    })
+}
 function googleLog(){
     window.location = "https://accounts.google.com/o/oauth2/v2/auth?client_id=812092900216-18qomh890locgbr24kf9t0ron8mb3unh.apps.googleusercontent.com&redirect_uri=http://finbok.com&response_type=code&scope=openid";
 }
-;
+
+function changeActivePetitions(){
+    var active = document.getElementById('v-pills-active-tab')
+    var done = document.getElementById('v-pills-done-tab')
+    var elementActive = document.getElementById("tab-active-petitions")  
+    var elementDone = document.getElementById("tab-done-petitions")  
+
+    active.addEventListener("click", function () {
+        active.classList.add("active")
+        done.classList.remove("active")
+        if(elementActive.style.display == "none"){
+            elementActive.style.display = "block"
+            elementDone.style.display = "none"
+        }else{
+            elementActive.style.display = "none"
+        }
+    })
+
+    done.addEventListener("click", function () {
+        done.classList.add("active")
+        active.classList.remove("active")
+        //Change the style                                     
+        if(elementDone.style.display == "none"){
+            elementDone.style.display = "block"
+            elementActive.style.display = "none"
+        }else{
+            elementDone.style.display = "none"
+        }
+    })
+}
+
+function changeActiveOffers(){
+    var activeOffer = document.getElementById("v-pills-active-tab-offers")
+    var doneOffer = document.getElementById("v-pills-done-tab-offers")
+
+    var elementActiveOffer = document.getElementById("tab-active-offers")
+    var elementDoneOffer = document.getElementById("tab-done-offers")
+
+    activeOffer.addEventListener("click", function () {
+        activeOffer.classList.add("active")
+        doneOffer.classList.remove("active")
+        if(elementActiveOffer.style.display == "none"){
+            elementActiveOffer.style.display = "block"
+            elementDoneOffer.style.display = "none"
+        }else{
+            elementActiveOffer.style.display = "none"
+        }
+    })
+
+    doneOffer.addEventListener("click", function () {
+        doneOffer.classList.add("active")
+        activeOffer.classList.remove("active")
+        //Change the style                                     
+        if(elementDoneOffer.style.display == "none"){
+            elementDoneOffer.style.display = "block"
+            elementActiveOffer.style.display = "none"
+        }else{
+            elementDoneOffer.style.display = "none"
+        }
+    })
+}

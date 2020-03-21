@@ -1,13 +1,31 @@
 document.addEventListener("DOMContentLoaded",function() {
-    var showChangePassword = document.getElementById('change_password')
-    showChangePassword.addEventListener("click", function () {
-        var element = document.getElementById("form_change_password")  
-        //Change the style                                     
-        if(element.style.display == "none"){
-            element.style.display = "block"
+    var active = document.getElementById('v-pills-active-tab')
+    var elementActive = document.getElementById("tab-active-petitions")  
+    var elementDone = document.getElementById("tab-done-petitions")  
+
+    active.addEventListener("click", function () {
+        console.log("wii")
+        if(elementActive.style.display == "none"){
+            elementActive.style.display = "block"
+            elementDone.style.display = "none"
         }else{
-            element.style.display = "none"
+            elementActive.style.display = "none"
         }
     })
 
+    var done = document.getElementById('v-pills-done-tab')
+    done.addEventListener("click", function () {
+        console.log("wuu")
+
+        //Change the style                                     
+        if(elementDone.style.display == "none"){
+            elementDone.style.display = "block"
+            elementActive.style.display = "none"
+        }else{
+            elementDone.style.display = "none"
+        }
+    })
+
+    
+    
 })
