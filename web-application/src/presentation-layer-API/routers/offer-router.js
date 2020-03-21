@@ -1,22 +1,24 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 
 module.exports = function({accountRouterAPI,petitionManager,offerManager}){
     const router = express.Router()
+    const serverSecret = "sdfkjdslkfjslkfd"
 
     
     //Obtain information of one offer
     router.get("/offer/:id",function(request,response){
-        const accountId =  0
+        var accountId =  0
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
+            const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
             
         }catch(e){
             console.log("Not Logged In ")
         }
-        const offerId = request.params.offerId
+        const offerId = request.params.id
         offerManager.getOfferById(offerId, function(errors,offer){
             const model = {
 				errors: errors,
@@ -26,7 +28,7 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
                 petition: null,
                 accountId: accountId
             }
-            if(model.errors != null){
+            if(0 == model.errors.length){
                 if(model.offer != null){
                     const petitionId = model.offer.petition_id
                     if(model.offer.account_id == model.accountId){
@@ -45,6 +47,7 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
                        
                     })
                 }else{
+
                     response.status(500).end()
                 }  
             }else{
@@ -56,20 +59,19 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
 
     //Create an offer
     router.post("/offer",function(request,response){
-        const accountId =  0
+        var accountId = ""
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
         }
 
-        const {title,author,place,state,commentary,price} = request.body
-        const petitionId = request.params.petitionId
+        const {title,author,place,state,commentary,price,petitionId } = request.body
+        //const petitionId  = request.params.petitionId
         const offer = {
             title: title,
             author: author,
@@ -84,7 +86,6 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
                 accountId: accountId,
             }
             if(result){
-                response.setHeader("Location", "/offers/"+id)
                 response.status(201).end()
             }else{
                 response.status(500).end()

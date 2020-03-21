@@ -33,12 +33,12 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
 
     //Obtain information of one petition and its offers
     router.get("/petitions/:id",function(request,response){
-        const accountId =  0
+        var accountId =  0
         try {
-            
-            //const authorizationHeader = request.get('Authorization')
-            //accountId = accountRouterAPI.AccesTokenInformation(authorizationHeader)
-            console.log(accountId)
+            const authorizationHeader = request.get('authorization')
+            const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
             
         }catch(e){
             console.log("Not Logged In ")
@@ -53,7 +53,7 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
                 const model = {
                     errors: errors,
                     petition: petition,
-                    petitionActive: null,
+                    petitionActive: false,
                     accountId: accountId,
                     offers: null,
                     isMine: false
@@ -61,6 +61,7 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
                 if(model.petition.active == true){
                     model.petitionActive = true
                 }
+
                 if(accountId == model.petition.account_id){
                     model.isMine = true
                 }

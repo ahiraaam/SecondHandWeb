@@ -1,7 +1,9 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 
-module.exports = function({purchaseManager,accountManager,offerManager}){
+module.exports = function({purchaseManager,accountManager,offerManager,petitionManager}){
     const router = express.Router()
+    const serverSecret = "sdfkjdslkfjslkfd"
     
     //Get purchase through petition
     router.get("/purchase/petition/:id",function(request,response){
@@ -20,7 +22,7 @@ module.exports = function({purchaseManager,accountManager,offerManager}){
         var petition = null
         var offer = null
         var purchase = null
-        purchaseManager.getPurchasesByPetition(petitionId,function(error,result){
+        purchaseManager.getPurchasesByPetition(petitionId,function(errors,result){
             if(0 < errors.length){
                 response.status(500).end()
             }else{
@@ -117,18 +119,16 @@ module.exports = function({purchaseManager,accountManager,offerManager}){
     //Create Pruchase
     router.post("/purchase",function(request,response){
 
-        const accountId =  0
+        var accountId = ""
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
         }
-
 
         const offerId = request.body.offerId
         const petitionId = request.body.petitionId
@@ -147,34 +147,39 @@ module.exports = function({purchaseManager,accountManager,offerManager}){
     
 
         petitionManager.getPetitionById(petitionId,function(errors,result){
+            
             if(0 < errors.length){
+
                 response.status(500).end()
             }else{
                 petition =  result
                 offerManager.getOfferById(offerId,function(errors,result){
                     if(0 < errors.length){
+
                         response.status(500).end()
                     }else{
                         offer = result
                         if(offer.active == 1 && petition.active == 1){
                             purchaseManager.createPurchase(purchase,accountId,petitionId,offerId,function(errors, purchase){
+                                console.log(errors)
                                 if(0 < errors.length){
+
                                     response.status(500).end()
                                 }else{
                                     const model = {
                                         errors: errors,
                                         purchase: purchase,
-                                        isLoggedIn: isLoggedIn,
-                                        username: username,
                                         accountId: accountId
                                     }
                                     petitionManager.updatePetitionStatus(petitionId,function(errors,result){
                                         if(0 < errors.length){
+
                                             response.status(500).end()
                                         }
                                     })
                                     offerManager.updateOfferStatus(offerId,function(errors,result){
                                         if(0 < errors.length){
+
                                             response.status(500).end()
                                         }
                                     })
@@ -183,6 +188,7 @@ module.exports = function({purchaseManager,accountManager,offerManager}){
                             })
                         }else{
                             if(0 < errors.length){
+
                                 response.status(500).end()
                             }
                         }
