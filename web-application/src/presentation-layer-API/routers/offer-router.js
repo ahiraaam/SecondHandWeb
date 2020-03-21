@@ -1,7 +1,9 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 
 module.exports = function({accountRouterAPI,petitionManager,offerManager}){
     const router = express.Router()
+    const serverSecret = "sdfkjdslkfjslkfd"
 
     
     //Obtain information of one offer
@@ -155,13 +157,17 @@ module.exports = function({accountRouterAPI,petitionManager,offerManager}){
     })
 
     //Optain offers of an account
-    router.get("offer/account/:id",function(request,response){
-        const accountId =  0
+    router.get("/offers/account/:id",function(request,response){
+        const accountId =  request.params.id
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
-            
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            var accountIdPayload = payload.id
+            if(!accountId==accountIdPayload){
+                response.status(402).end()
+                return
+            }
             
         }catch(e){
             response.status(401).end()

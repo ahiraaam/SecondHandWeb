@@ -1,5 +1,7 @@
 
 document.addEventListener("DOMContentLoaded",function() {
+    changeActivePetitions()
+    changeActiveOffers()
     changeToPage(location.pathname)
     if(localStorage.accessToken){
         login(localStorage.accessToken,localStorage.idToken)
@@ -16,12 +18,12 @@ document.addEventListener("DOMContentLoaded",function() {
 		logout()
     }
     document.body.addEventListener("click", function(event){
-		if(event.target.tagName == "A"){
-			event.preventDefault()
-            const url = event.target.getAttribute("href")
-            console.log(url)
-			goToPage(url)
-		}
+        if(event.target.tagName == "A"){
+                event.preventDefault()
+                const url = event.target.getAttribute("href")
+                console.log(url)
+                goToPage(url)
+        }
     })
     document.querySelector("#login-page form").addEventListener("submit", function(event){
         event.preventDefault()
@@ -46,6 +48,12 @@ document.addEventListener("DOMContentLoaded",function() {
                         var jsonPayload = parseJwt(body.id_token)
                         var username = document.getElementById("nav-bar-username")
                         var anchorMyAccount = document.getElementById("a-my-account")
+                        var anchorMyAccount = document.getElementById("a-my-account")
+                        var anchorMyPetitions = document.getElementById("a-my-petitions")
+                        var anchorMyOffers = document.getElementById("a-my-offers")
+                        anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+                        anchorMyPetitions.setAttribute("href", '/account/'+jsonPayload.id+"/petitions")
+                        anchorMyOffers.setAttribute("href", '/account/'+jsonPayload.id+"/offers")
                         anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
                         username.innerText = jsonPayload.username
                         goToPage("/")
@@ -119,6 +127,11 @@ document.addEventListener("DOMContentLoaded",function() {
                     var jsonPayload = parseJwt(body.id_token)
                     var username = document.getElementById("nav-bar-username")
                     var anchorMyAccount = document.getElementById("a-my-account")
+                    var anchorMyPetitions = document.getElementById("a-my-petitions")
+                    var anchorMyOffers = document.getElementById("a-my-offers")
+                    anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
+                    anchorMyPetitions.setAttribute("href", '/account/'+jsonPayload.id+"/petitions")
+                    anchorMyOffers.setAttribute("href", '/account/'+jsonPayload.id+"/offers")
                     anchorMyAccount.setAttribute("href", '/account/'+jsonPayload.id)
                     username.innerText = jsonPayload.username
                     goToPage("/")
@@ -141,9 +154,21 @@ document.addEventListener("DOMContentLoaded",function() {
         var id = document.querySelector("#delete-account #accountId").value
         deleteAccount(id)
     })
-
+    document.querySelector("#edit-petition-page form").addEventListener("submit",function(event){
+        event.preventDefault()
+        var id = document.querySelector("#edit-petition-page #editPetitionId").value
+        editPetitionPut(id)
+        goToPage("/")
+    })
+    
 })
-
+document.addEventListener("submit",function(e){
+    if(e.target && e.target.id=="form-delete-petition"){
+        e.preventDefault()
+        var id = document.querySelector("#account-petitions-page #idPetition").value
+        deletePetition(id)
+    }
+})
 window.addEventListener("popstate", function(event){
 	const url = location.pathname
 	changeToPage(url)
@@ -250,7 +275,7 @@ function fetchAccount(id){
 }
 function fetchAccountPetitions(id){
     fetch(
-        "http://192.168.99.100:8080/api/account/"+id+"/petition",{
+        "http://192.168.99.100:8080/api/account/"+id+"/petitions",{
             method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -258,9 +283,270 @@ function fetchAccountPetitions(id){
 			}
         }
     ).then(function(response){
-        console.log(response)
-        console.log(response)
+        if(response.status == 200){
+            return response.json().then(function(model){
+                if(model.activePetitions.length != 0){
+                    const row = document.querySelector("#tab-active-petitions")
+                    row.innerText = ""
+                    for(const activePetition of model.activePetitions){
+                        const card = document.createElement("div")
+                        card.setAttribute("class", "card mb-3 text-center")
+                        const img = document.createElement("img")
+                        img.setAttribute("src", activePetition.photo)
+                        img.setAttribute("class", "card-img-top mt-2 image-card")
+                        const title = document.createElement("h4")
+                        title.innerText = activePetition.title
+                        const author = document.createElement("p")
+                        author.innerText = activePetition.author
+                        const insideRow = document.createElement("div")
+                        insideRow.setAttribute("class", "row")
 
+                        const divButtons = document.createElement("div")
+                        divButtons.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const details = document.createElement("a")
+                        details.innerText = "See details"
+                        details.setAttribute("class", "btn btn-block primary-btn")
+                        details.setAttribute("href", "/petitions/"+activePetition.id)
+
+                        const divEdit = document.createElement("div")
+                        divEdit.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const edit = document.createElement("a")
+                        edit.innerText = "Edit"
+                        edit.setAttribute("class", "btn btn-block primary-btn")
+                        edit.setAttribute("href", "/edit-petition/"+activePetition.id)
+
+                        const rowDelete = document.createElement("div")
+                        rowDelete.setAttribute("class", "row mt-3")
+                        const form = document.createElement("form")
+                        form.setAttribute("id" ,"form-delete-petition")
+                        form.setAttribute("type","DELETE")
+                        const idPetition = document.createElement("input")
+                        idPetition.setAttribute("type", "hidden")
+                        idPetition.setAttribute("id", "idPetition")
+                        idPetition.setAttribute("value", activePetition.id)
+                        const buttonDelete = document.createElement("button")
+                        buttonDelete.setAttribute("type", "submit")
+                        buttonDelete.setAttribute("id" , "buttonDeletePetition")
+                        buttonDelete.setAttribute("class","btn delete-btn")
+                        buttonDelete.innerText = "Delete"
+
+                        row.append(card)
+                        card.appendChild(img)
+                        card.appendChild(title)
+                        card.appendChild(author)
+                        card.append(insideRow)
+                        insideRow.appendChild(divButtons)
+                        divButtons.appendChild(details)
+                        insideRow.appendChild(divEdit)
+                        divEdit.appendChild(edit)
+                        card.append(form)
+                        form.appendChild(buttonDelete)
+                        form.appendChild(idPetition)
+                        //card.append(rowDelete)
+                        //rowDelete.appendChild(divDelete)
+                        //divDelete.appendChild(aDelete)
+
+                    }
+                    
+                }else{
+                    const row = document.querySelector("#tab-active-petitions")
+                    row.innerText = ""
+                    const p = document.createElement("h2")
+                    p.innerText = "No active petitions yet"
+                    row.appendChild(p)
+                }
+                if(model.inactivePetitions.length !=0){
+                    const row = document.querySelector("#tab-done-petitions")
+                    row.innerText = ""
+                    for(const inactivePetition of model.inactivePetitions){
+                        const card = document.createElement("div")
+                        card.setAttribute("class", "card mb-3 text-center")
+                        const img = document.createElement("img")
+                        img.setAttribute("src", inactivePetition.photo)
+                        img.setAttribute("class", "card-img-top mt-2 image-card")
+                        const title = document.createElement("h4")
+                        title.innerText = inactivePetition.title
+                        const author = document.createElement("p")
+                        author.innerText = inactivePetition.author
+                        const insideRow = document.createElement("div")
+                        insideRow.setAttribute("class", "row")
+
+                        const divButtons = document.createElement("div")
+                        divButtons.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const details = document.createElement("a")
+                        details.innerText = "See details"
+                        details.setAttribute("class", "btn btn-block primary-btn")
+                        details.setAttribute("href", "/petitions/"+inactivePetition.id)
+
+                        const divPurchase = document.createElement("div")
+                        divPurchase.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const purchase = document.createElement("a")
+                        purchase.innerText = "See Purchase"
+                        purchase.setAttribute("class", "btn btn-block primary-btn")
+                        purchase.setAttribute("href", "/purchase/"+inactivePetition.id)
+
+                        row.append(card)
+                        card.appendChild(img)
+                        card.appendChild(title)
+                        card.appendChild(author)
+                        card.append(insideRow)
+                        insideRow.appendChild(divButtons)
+                        divButtons.appendChild(details)
+                        insideRow.appendChild(divPurchase)
+                        divPurchase.appendChild(purchase)
+
+                    }
+                }else{
+                    const row = document.querySelector("#tab-done-petitions")
+                    row.innerText = ""
+                    const p = document.createElement("h2")
+                    p.innerText = "No done petitions yet"
+                    row.appendChild(p)
+                }
+            })
+        }else{
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        console.log(error)
+    })
+}
+function fetchAccountOffers(id){
+    fetch(
+        "http://192.168.99.100:8080/api/offers/account/"+id,{
+            method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Authorization": "User "+ localStorage.accessToken
+			}
+        }
+    ).then(function(response){
+        if(response.status == 200){
+            return response.json().then(function(model){
+
+                if(model.activeOffers.length != 0){
+                    const row = document.querySelector("#account-offers-page #tab-active-offers")
+                    row.innerText = ""
+                    for(const activeOffer of model.activeOffers){
+                        const card = document.createElement("div")
+                        card.setAttribute("class", "card mb-3 text-center")
+                    
+                        const title = document.createElement("h4")
+                        title.innerText = activeOffer.title
+                        const author = document.createElement("p")
+                        author.innerText = activeOffer.author
+                        const insideRow = document.createElement("div")
+                        insideRow.setAttribute("class", "row")
+
+                        const divButtons = document.createElement("div")
+                        divButtons.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const details = document.createElement("a")
+                        details.innerText = "See details"
+                        details.setAttribute("class", "btn btn-block primary-btn")
+                        details.setAttribute("href", "/offers/"+activeOffer.id)
+
+                        const divEdit = document.createElement("div")
+                        divEdit.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const edit = document.createElement("a")
+                        edit.innerText = "Edit"
+                        edit.setAttribute("class", "btn btn-block primary-btn")
+                        edit.setAttribute("href", "/edit-offer/"+activeOffer.id)
+
+                        const rowDelete = document.createElement("div")
+                        rowDelete.setAttribute("class", "row mt-3")
+                        const form = document.createElement("form")
+                        form.setAttribute("id" ,"form-delete-petition")
+                        form.setAttribute("type","DELETE")
+                        const idPetition = document.createElement("input")
+                        idPetition.setAttribute("type", "hidden")
+                        idPetition.setAttribute("id", "idPetition")
+                        idPetition.setAttribute("value", activeOffer.id)
+                        const buttonDelete = document.createElement("button")
+                        buttonDelete.setAttribute("type", "submit")
+                        buttonDelete.setAttribute("id" , "buttonDeletePetition")
+                        buttonDelete.setAttribute("class","btn delete-btn")
+                        buttonDelete.innerText = "Delete"
+
+                        row.append(card)
+                        card.appendChild(title)
+                        card.appendChild(author)
+                        card.append(insideRow)
+                        insideRow.appendChild(divButtons)
+                        divButtons.appendChild(details)
+                        insideRow.appendChild(divEdit)
+                        divEdit.appendChild(edit)
+                        card.append(form)
+                        form.appendChild(buttonDelete)
+                        form.appendChild(idPetition)
+                        //card.append(rowDelete)
+                        //rowDelete.appendChild(divDelete)
+                        //divDelete.appendChild(aDelete)
+
+                    }
+                    
+                }else{
+                    const row = document.querySelector("#account-offers-page #tab-active-offers")
+                    row.innerText = ""
+                    const p = document.createElement("h2")
+                    p.innerText = "No active offers yet"
+                    row.appendChild(p)
+                }
+                
+                if(model.inactiveOffers.length !=0){
+                    const row = document.querySelector("#account-offers-page #tab-done-offers")
+                    row.innerText = ""
+                    for(const inactiveOffer of model.inactiveOffers){
+                        console.log(inactiveOffer)
+                        const card = document.createElement("div")
+                        card.setAttribute("class", "card mb-3 text-center")
+                      
+                        const title = document.createElement("h4")
+                        title.innerText = inactiveOffer.title
+                        const author = document.createElement("p")
+                        author.innerText = inactiveOffer.author
+                        const insideRow = document.createElement("div")
+                        insideRow.setAttribute("class", "row")
+
+                        const divButtons = document.createElement("div")
+                        divButtons.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const details = document.createElement("a")
+                        details.innerText = "See details"
+                        details.setAttribute("class", "btn btn-block primary-btn")
+                        details.setAttribute("href", "/offers/"+inactiveOffer.id)
+
+                        const divPurchase = document.createElement("div")
+                        divPurchase.setAttribute("class", "col-md-6 btn-block-md-6 text-center")
+                        const purchase = document.createElement("a")
+                        purchase.innerText = "See Purchase"
+                        purchase.setAttribute("class", "btn btn-block primary-btn")
+                        purchase.setAttribute("href", "/purchase/"+inactiveOffer.id)
+
+                        row.append(card)
+                        card.appendChild(title)
+                        card.appendChild(author)
+                        card.append(insideRow)
+                        insideRow.appendChild(divButtons)
+                        divButtons.appendChild(details)
+                        insideRow.appendChild(divPurchase)
+                        divPurchase.appendChild(purchase)
+                        
+                    }
+                }else{
+                    const row = document.querySelector("#account-offers-page #tab-done-offers")
+                    row.innerText = ""
+                    const p = document.createElement("h2")
+                    p.innerText = "No done offers yet"
+                    row.appendChild(p)
+                }
+            })
+        }else{
+            console.log("Error 1")
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
     })
 }
 function changeToPage(url){
@@ -292,8 +578,20 @@ function changeToPage(url){
         document.getElementById("account-petitions-page").classList.add("current-page")
         const id = url.split("/")[2]
         fetchAccountPetitions(id)
-    }
-    else if(url == "/error"){
+    }else if(new RegExp("/account/[0-9]+/offers").test(url)){
+        document.getElementById("account-offers-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        fetchAccountOffers(id)
+    }else if(new RegExp("/edit-petition/[0-9]+$").test(url)){
+        document.getElementById("edit-petition-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        editPetition(id)
+    }else if(new RegExp("/edit-offer/[0-9]+$").test(url)){
+        document.getElementById("edit-offer-page").classList.add("current-page")
+        const id = url.split("/")[2]
+        console.log("Edit OFFER" + id)
+        //editPetition(id)
+    }else if(url == "/error"){
         document.getElementById("error-page").classList.add("current-page")
     }
 	
@@ -303,6 +601,7 @@ function login(accessToken, idToken){
     localStorage.idToken = idToken
 	document.body.classList.remove("isLoggedOut")
     document.body.classList.add("isLoggedIn")
+    
 }
 function logout(){
     localStorage.clear()
@@ -338,8 +637,150 @@ function parseJwt (token) {
     }).join(''));
     return JSON.parse(jsonPayload);
 }
+function deletePetition(id){
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "DELETE",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status == 201){
+            console.log("SE ELIMINOOO")
+            goToPage("/")
+        }else{
+            console.log("ERROROOR")
+            goToPage("/error")
+        }
+    }).catch(function(error){
+        console.log(error)
+        goToPage("/error")
+    })
+}
+function editPetition(id){
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "GET",
+			headers: {
+                "Authorization": "User "+ localStorage.accessToken
+            }
+        }
+    ).then(function(response){
+        if(response.status==200){
+            var title = document.querySelector("#edit-petition-page #titleEdit")
+            var author = document.querySelector("#edit-petition-page #authorEdit")
+            var place = document.querySelector("#edit-petition-page #placeEdit")
+            var state = document.querySelector("#edit-petition-page #stateEdit")
+            var commentary = document.querySelector("#edit-petition-page #commentaryEdit")
+            var photo = document.querySelector("#edit-petition-page #photoEdit")
+            var editPetitionId = document.querySelector("#editPetitionId")
+            editPetitionId.value = id
+            return response.json().then(function(result){
+                title.value = result.petition.title
+                author.value = result.petition.author
+                place.value = result.petition.place
+                state.value = result.petition.state
+                commentary.value = result.petition.commentary
+                photo.value = result.petition.photo
+            })
+        }else{
+            console.log("noooo")
+        }
+    })
+}
+function editPetitionPut(id){
+        const title = document.querySelector("#form-update-petition #titleEdit").value
+        const author = document.querySelector("#form-update-petition #authorEdit").value
+        const place = document.querySelector("#form-update-petition #placeEdit").value
+        const state = document.querySelector("#form-update-petition #stateEdit").value
+        const commentary = document.querySelector("#form-update-petition #commentaryEdit").value
+        const photo = document.querySelector("#form-update-petition #photoEdit").value
+        const petition = {title,author,place,state,commentary,photo}
+        document.getElementById("form-update-petition").reset()
+    fetch(
+        "http://192.168.99.100:8080/api/petitions/"+id,{
+            method: "PUT",
+			headers: {
+                "Content-Type": "application/json",
+                "Authorization": "User "+ localStorage.accessToken
+            },
+            body: JSON.stringify(petition)
+        }
+    ).then(function(response){
+        if(response.status == 201){
+            goToPage("/")
+        }else{
+            goToPage("/error")
+            console.log(response)
+        }
+    }).catch(function(error){
+        console.log(error)
 
+        goToPage("/error")
+    })
+}
 function googleLog(){
     window.location = "https://accounts.google.com/o/oauth2/v2/auth?client_id=812092900216-18qomh890locgbr24kf9t0ron8mb3unh.apps.googleusercontent.com&redirect_uri=http://finbok.com&response_type=code&scope=openid";
 }
-;
+
+function changeActivePetitions(){
+    var active = document.getElementById('v-pills-active-tab')
+    var done = document.getElementById('v-pills-done-tab')
+    var elementActive = document.getElementById("tab-active-petitions")  
+    var elementDone = document.getElementById("tab-done-petitions")  
+
+    active.addEventListener("click", function () {
+        active.classList.add("active")
+        done.classList.remove("active")
+        if(elementActive.style.display == "none"){
+            elementActive.style.display = "block"
+            elementDone.style.display = "none"
+        }else{
+            elementActive.style.display = "none"
+        }
+    })
+
+    done.addEventListener("click", function () {
+        done.classList.add("active")
+        active.classList.remove("active")
+        //Change the style                                     
+        if(elementDone.style.display == "none"){
+            elementDone.style.display = "block"
+            elementActive.style.display = "none"
+        }else{
+            elementDone.style.display = "none"
+        }
+    })
+}
+
+function changeActiveOffers(){
+    var activeOffer = document.getElementById("v-pills-active-tab-offers")
+    var doneOffer = document.getElementById("v-pills-done-tab-offers")
+
+    var elementActiveOffer = document.getElementById("tab-active-offers")
+    var elementDoneOffer = document.getElementById("tab-done-offers")
+
+    activeOffer.addEventListener("click", function () {
+        activeOffer.classList.add("active")
+        doneOffer.classList.remove("active")
+        if(elementActiveOffer.style.display == "none"){
+            elementActiveOffer.style.display = "block"
+            elementDoneOffer.style.display = "none"
+        }else{
+            elementActiveOffer.style.display = "none"
+        }
+    })
+
+    doneOffer.addEventListener("click", function () {
+        doneOffer.classList.add("active")
+        activeOffer.classList.remove("active")
+        //Change the style                                     
+        if(elementDoneOffer.style.display == "none"){
+            elementDoneOffer.style.display = "block"
+            elementActiveOffer.style.display = "none"
+        }else{
+            elementDoneOffer.style.display = "none"
+        }
+    })
+}

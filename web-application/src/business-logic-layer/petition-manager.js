@@ -29,9 +29,7 @@ module.exports = function({petitionRepository}){
 		},
 
 		deletePetition : function(petition_id, callback){
-
 			petitionRepository.deletePetition(petition_id,callback)
-
 		},
 
 		updatePetition : function(petition,id,callback){

@@ -9,6 +9,7 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     router.get("/petitions", function(request,response){
         petitionManager.getAllPetitions(function(errors,petitions){
 			if(0 < errors.length){
+                console.log(errors)
                 response.status(500).end()
             }else{
                 response.status(200).json(petitions)
@@ -36,8 +37,9 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
         const accountId =  0
         try {
             
-            //const authorizationHeader = request.get('Authorization')
-            //accountId = accountRouterAPI.AccesTokenInformation(authorizationHeader)
+            const authorizationHeader = request.get('authorization')
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
             console.log(accountId)
             
         }catch(e){
@@ -122,10 +124,12 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     //Update a petition
     router.put("/petitions/:id",function(request,response){
         
-        const accountId =  0
+        var accountId =  0
         try {
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            accountId = payload.id
         }catch(e){
             response.status(401).end()
             return
@@ -146,26 +150,32 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
             commentary: commentary,
             photo: photo
         }
+
         petitionManager.updatePetition(petition, petitionId,function(errors,petition){
             const model = {
 				errors: errors,
                 petition: petition,
             }
             if(0 < errors.length){
+
                 response.status(500).end()
             }else{
                 response.status(201).end()
             }
         })
     })
-
-
     //Obtain petitions of an account
     router.get("/account/:id/petitions",function(request,response){
-        const accountId =  0
+        var accountId = request.params.id
         try {
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
+		    const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
+            var accountIdPayload = payload.id
+            if(!accountId==accountIdPayload){
+                response.status(402).end()
+                return
+            }
             
         }catch(e){
             response.status(401).end()
@@ -190,35 +200,26 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
                         model.inactivePetitions = inactivePetitions
                         response.status(200).json(model)
                     }
-    
                 })
-            
             }
-
-            
         })
-
-
     })
-
     //Delete petition
     router.delete("/petitions/:id",function (request,response){
-        const accountId =  0
+        const petitionId = request.params.id
         try {
-		
             const authorizationHeader = request.get('authorization')
-            accountId=accountRouterAPI.AccesTokenInformation(authorizationHeader)
+            const accessToken = authorizationHeader.substr("User ".length)
+            const payload = jwt.verify(accessToken, serverSecret)
             
         }catch(e){
             response.status(401).end()
             return
         }
-        
-        //const id = request.params.id
-        
-        petitionManager.deletePetition(petitionId,function(errors,response){
-            console.log("eliminada")
-            console.log("eliminada")
+                
+        petitionManager.deletePetition(petitionId,function(errors,res){
+            console.log("Peticion eliminada")
+            console.log("Peticion eliminada")
             if(0 < errors.length){
                 response.status(500).end()
             }else{
