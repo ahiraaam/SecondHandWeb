@@ -58,7 +58,6 @@ CREATE TABLE purchases(
 	offer_id INT UNSIGNED,
 	seller_id INT UNSIGNED,
 	FOREIGN KEY (account_id) REFERENCES accounts(id),
-	FOREIGN KEY (seller_id) REFERENCES accounts(id),
 	FOREIGN KEY (petition_id) REFERENCES petitions(id),
 	FOREIGN KEY (offer_id) REFERENCES offer(id)
 		ON DELETE CASCADE

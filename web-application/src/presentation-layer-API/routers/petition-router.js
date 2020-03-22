@@ -7,6 +7,7 @@ module.exports = function({accountRouterAPI,petitionManager, offerManager}){
     
     //Obtain all the petitions
     router.get("/petitions", function(request,response){
+        
         petitionManager.getAllPetitions(function(errors,petitions){
 			if(0 < errors.length){
                 console.log(errors)

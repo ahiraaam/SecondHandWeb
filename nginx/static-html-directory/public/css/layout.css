@@ -14,6 +14,7 @@ body{
 main{
 	padding-bottom: 60px;
 }
+
 body main .container-fluid{
 	padding: 8px;
 	overflow-y: auto !important;
@@ -84,3 +85,33 @@ body.isLoggedOut .showIfLoggedIn{
 body.isLoggedIn .showIfLoggedOut{
 	display: none;
 }
+.hidden{
+	display:  none !important;
+}
+.block{
+	display: block !important;
+	position: absolute;
+	z-index: 999;
+}
+.loader {
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 16px solid #9437C9;
+	border-right: 16px solid #9437C9;
+	border-bottom: 16px solid #9437C9;
+	width: 120px;
+	height: 120px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+	z-index: 999;
+  }
+  
+  @-webkit-keyframes spin {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }

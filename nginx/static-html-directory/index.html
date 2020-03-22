@@ -3,27 +3,25 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>The Community</title>
+	<title>FinBok</title>
 	<link rel="stylesheet" href="public/css/layout.css">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-	<script src="public/js/navigation-handler.js"></script>
-	<script src="public/js/index.js"></script>
+	<script src="public/js/navigation-handler.js" type="module"></script>
 
 </head>
 <body>
 	<header>
 		<nav class="navbar navbar-expand-sm primary-color navbar-dark ">
-			<!-- Brand/logo -->
 				<div class="showIfLoggedIn">
 					<a class="btn primary-btn my-2 my-sm-0 my-lg-0 mr-auto" href="/create-petition">Create Petition</a>
 				</div>
 				<a class="navbar-brand mx-auto" href="/">
 					<img src="public/images/book.svg" alt="logo" style="width:50px;">
-					SeLec
+					FinBok
 				</a>
 			<ul class="navbar-nav mr-3 ml-auto">
 				<li class="showIfLoggedIn nav-item dropdown">
@@ -111,7 +109,7 @@
 									<label for="inputPassword">Password</label>							
 									<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
 								</div>
-								<input class="btn primary-btn btn-block text-uppercase" type="submit" value="Sign in">
+								<input id="submit" class="btn primary-btn btn-block text-uppercase" type="submit" value="Sign in">
 								<div class="form-group my-3">
 									<a class="link" href="/signup">Don't have account? Sign Up</a>
 								</div>
@@ -166,7 +164,6 @@
 				</div>	
 			</div>
 		</div>
-		
 		<div id="account-petitions-page" class="container-fluid my-3">
 			<div class="row">
 				<div class="col-md-3">
@@ -203,8 +200,6 @@
 				</div>
 			</div>
 		</div>
-
-
 		<div id="create-purchase-page" class="container col-sm-9 col-md-7 col-lg-8" >
 			<h2 class="text-center">Complete Purchase</h2>
 			<div class="row">
@@ -268,7 +263,7 @@
 							</div>
 							<div class="form-group col-md-6">
 								<label for="card_number">CVC (XXX)</label>
-								<input type="text" id="cvc" name="cvc" class="form-control" placeholder="CVC" required>                
+								<input type="number" id="cvc" name="cvc" class="form-control" placeholder="CVC" required>                
 							</div>
 						</div>   
 						<div class="form-group col-md-6" style="display: none">
@@ -500,8 +495,10 @@
 				</div>
 			</div>
 		</div>
+		<div id="loader-page" class="container-fluid" style="z-index: 999;">
+			<div class="loader text-center mx-auto"></div>
+		</div>
 	</main>
-
 	<footer class="font-small primary-color text-white footer navbar-fixed-bottom"> 
 			<div class="footer-copyright text-center py-3">© 2020 Copyright:
 				Made in Jönköping University by Ahiram Cruz and Juan Carlos Pichardo
